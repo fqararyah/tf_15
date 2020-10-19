@@ -51,7 +51,7 @@ class BigtableRangeKeyDatasetOp : public DatasetOpKernel {
       table_->Ref();
     }
 
-    ~Dataset() override { table_->Unref(); }
+    ~Dataset() override { table_->Unref(20); }
 
     std::unique_ptr<IteratorBase> MakeIteratorInternal(
         const string& prefix) const override {

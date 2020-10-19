@@ -35,7 +35,7 @@ class TensorForestCreateTreeVariableOp : public OpKernel {
     auto* const result = new TensorForestTreeResource();
 
     if (!result->InitFromSerialized(tree_config_t->scalar<tstring>()())) {
-      result->Unref();
+      result->Unref(247);
       OP_REQUIRES(context, false,
                   errors::InvalidArgument("Unable to parse tree config."));
     }

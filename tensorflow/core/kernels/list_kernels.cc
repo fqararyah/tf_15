@@ -39,7 +39,7 @@ namespace tensorflow {
 typedef Eigen::ThreadPoolDevice CPUDevice;
 
 TensorList::~TensorList() {
-  if (tensors_) tensors_->Unref();
+  if (tensors_) tensors_->Unref(257);
 }
 
 void TensorList::Encode(VariantTensorData* data) const {

@@ -80,7 +80,7 @@ Status RemoteMgr::DeleteTensorHandle(
         remote_handle.op_id, ", Output num: ", remote_handle.output_num);
   }
 
-  iter->second->Unref();
+  iter->second->Unref(97);
   remote_tensor_handle_map_.erase(iter);
 
   return Status::OK();

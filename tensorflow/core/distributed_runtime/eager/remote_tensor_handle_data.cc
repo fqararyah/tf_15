@@ -88,7 +88,7 @@ RemoteTensorHandleData::RemoteTensorHandleData(int64 op_id, int output_num,
 RemoteTensorHandleData::~RemoteTensorHandleData() {
   DestoryRemoteTensorHandle(ctx_, eager_client_, context_id_, op_id_,
                             output_num_);
-  ctx_->Unref();
+  ctx_->Unref(99);
 }
 
 Status RemoteTensorHandleData::Tensor(const tensorflow::Tensor** t) const {
@@ -152,7 +152,7 @@ UnshapedRemoteTensorHandleData::~UnshapedRemoteTensorHandleData() {
     DestoryRemoteTensorHandle(ctx_, eager_client_, context_id_, op_id_,
                               output_num_);
   }
-  ctx_->Unref();
+  ctx_->Unref(100);
 }
 
 Status UnshapedRemoteTensorHandleData::Tensor(

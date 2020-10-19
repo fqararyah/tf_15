@@ -471,7 +471,7 @@ void TFE_DeleteTensorHandle(TFE_TensorHandle* h) {
   VLOG(1) << "Deleting tensor handle " << h << " with internal handle "
           << h->handle;
   if (h->handle) {
-    h->handle->Unref();
+    h->handle->Unref(3);
   }
   delete h;
 }
@@ -570,11 +570,11 @@ TF_Tensor* TFE_TensorHandleResolve(TFE_TensorHandle* h, TF_Status* status) {
     }
     status->status = h_cpu->Tensor(&t);
     if (!status->status.ok()) {
-      h_cpu->Unref();
+      h_cpu->Unref(4);
       return nullptr;
     }
     TF_Tensor* retval = tensorflow::TF_TensorFromTensor(*t, status);
-    h_cpu->Unref();
+    h_cpu->Unref(5);
     return retval;
   } else {
     tensorflow::Tensor tensor;

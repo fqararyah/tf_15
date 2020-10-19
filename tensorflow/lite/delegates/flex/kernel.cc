@@ -267,7 +267,7 @@ class OpNode {
 
   void ClearEagerInputs() {
     for (tensorflow::TensorHandle* h : *op_->MutableInputs()) {
-      if (h) h->Unref();
+      if (h) h->Unref(174);
     }
     op_->MutableInputs()->clear();
   }

@@ -102,7 +102,7 @@ Benchmark::Benchmark(const string& device, Graph* g,
 
 Benchmark::~Benchmark() {
   if (device_) {
-    rendez_->Unref();
+    rendez_->Unref(60);
     // We delete `exec_` before `device_` because the `exec_` destructor may
     // run kernel destructors that may attempt to access state borrowed from
     // `device_`, such as the resource manager.

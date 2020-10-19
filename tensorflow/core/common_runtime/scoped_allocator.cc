@@ -59,7 +59,7 @@ ScopedAllocator::~ScopedAllocator() {
   fout<<"scoped_aloc"<<"\n";  
   fout.close();
   //*fareed
-  if (tbuf_) tbuf_->Unref();
+  if (tbuf_) tbuf_->Unref(79);
 }
 
 void* ScopedAllocator::AllocateRaw(int32 field_index, size_t num_bytes) {
@@ -105,7 +105,7 @@ void* ScopedAllocator::AllocateRaw(int32 field_index, size_t num_bytes) {
   fout<<"scoped_alloc::"<<"\n";  
   fout.close();
   //*fareed
-    container_->Unref();
+    container_->Unref(80);
     container_ = nullptr;
   }
   VLOG(1) << "AllocateRaw returning " << ptr;

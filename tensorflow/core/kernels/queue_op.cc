@@ -60,7 +60,7 @@ void QueueOpKernel::ComputeAsync(OpKernelContext* ctx, DoneCallback callback) {
                          callback);
   }
   ComputeAsync(ctx, queue, [callback, queue]() {
-    queue->Unref();
+    queue->Unref(265);
     callback();
   });
 }

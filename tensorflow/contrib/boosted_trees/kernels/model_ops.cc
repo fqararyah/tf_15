@@ -48,7 +48,7 @@ class CreateTreeEnsembleVariableOp : public OpKernel {
     auto* result = new DecisionTreeEnsembleResource();
     if (!result->InitFromSerialized(tree_ensemble_config_t->scalar<tstring>()(),
                                     stamp_token)) {
-      result->Unref();
+      result->Unref(24);
       OP_REQUIRES(
           context, false,
           errors::InvalidArgument("Unable to parse tree ensemble config."));

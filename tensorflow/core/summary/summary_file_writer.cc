@@ -188,7 +188,7 @@ Status CreateSummaryFileWriter(int max_queue, int flush_millis,
   SummaryFileWriter* w = new SummaryFileWriter(max_queue, flush_millis, env);
   const Status s = w->Initialize(logdir, filename_suffix);
   if (!s.ok()) {
-    w->Unref();
+    w->Unref(169);
     *result = nullptr;
     return s;
   }

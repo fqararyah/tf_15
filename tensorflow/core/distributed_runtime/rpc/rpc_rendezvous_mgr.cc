@@ -282,7 +282,7 @@ void RpcRemoteRendezvous::RecvFromRemoteAsync(
     call->ReleaseWorker(session()->worker_cache.get());
     call->done()(s, Args(), call->recv_args(), call->tensor(), call->is_dead());
     get_call_freelist()->Release(call);
-    Unref();
+    Unref(105);
   });
 }
 

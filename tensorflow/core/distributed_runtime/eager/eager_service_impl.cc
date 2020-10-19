@@ -239,7 +239,7 @@ Status EagerServiceImpl::ExecuteOp(const Operation& operation,
               remote_handle, &handle));
       op->AddInput(handle);
       // Unref handle since it has a ref as an input now.
-      handle->Unref();
+      handle->Unref(83);
     }
   }
 
@@ -342,7 +342,7 @@ Status EagerServiceImpl::CloseContext(const CloseContextRequest* request,
   // GetServerContext returns a newly Reffed copy of ServerContext, which is
   // unreffed by context_unref. Additionally, we need to unref it one time since
   // we are releasing it from the map.
-  context->Unref();
+  context->Unref(84);
 
   return Status::OK();
 }
@@ -380,7 +380,7 @@ Status EagerServiceImpl::SendTensor(const SendTensorRequest* request,
     TF_RETURN_IF_ERROR(EagerCopyToDevice(tensor_handle, ctx, ctx->Executor(),
                                          device, false, &copied_handle));
     tensors.push_back(copied_handle);
-    tensor_handle->Unref();
+    tensor_handle->Unref(85);
   }
 
   context->Context()->RemoteMgr()->AddOperationOutputs(tensors,
@@ -408,7 +408,7 @@ Status EagerServiceImpl::SendTensor(const SendTensorOp& send_tensor,
                                          eager_context->Executor(), device,
                                          false, &copied_handle));
     tensors.push_back(copied_handle);
-    tensor_handle->Unref();
+    tensor_handle->Unref(86);
   }
 
   eager_context->RemoteMgr()->AddOperationOutputs(tensors, send_tensor.op_id());

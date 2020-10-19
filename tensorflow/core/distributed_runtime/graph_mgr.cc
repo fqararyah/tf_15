@@ -67,7 +67,7 @@ GraphMgr::GraphMgr(const WorkerEnv* worker_env, DeviceMgr* device_mgr)
 }
 
 GraphMgr::~GraphMgr() {
-  for (auto p : table_) p.second->Unref();
+  for (auto p : table_) p.second->Unref(109);
 }
 
 GraphMgr::Item::~Item() {
@@ -301,7 +301,7 @@ Status GraphMgr::Register(const string& handle, const GraphDef& gdef,
   Status s = InitItem(handle, gdef, session, graph_options, debug_options,
                       collective_graph_key, cluster_flr, item);
   if (!s.ok()) {
-    item->Unref();
+    item->Unref(110);
     return s;
   }
 
@@ -328,7 +328,7 @@ Status GraphMgr::Deregister(const string& handle) {
     item = iter->second;
     table_.erase(iter);
   }
-  item->Unref();
+  item->Unref(111);
   return Status::OK();
 }
 
@@ -343,7 +343,7 @@ Status GraphMgr::DeregisterAll() {
     table_.clear();
   }
   for (auto item : items) {
-    item->Unref();
+    item->Unref(112);
   }
   return Status::OK();
 }
@@ -363,14 +363,14 @@ Status GraphMgr::SendInputs(const int64 step_id, const NamedTensors& in) {
   metrics::RecordGraphInputTensors(input_size);
   Status s =
       SendTensorsToRendezvous(rendezvous, nullptr, {}, keys, tensors_to_send);
-  rendezvous->Unref();
+  rendezvous->Unref(113);
   return s;
 }
 
 Status GraphMgr::RecvOutputs(const int64 step_id, NamedTensors* out) {
   Rendezvous* rendezvous = worker_env_->rendezvous_mgr->Find(step_id);
   Status s = RecvOutputsFromRendezvous(rendezvous, out, Rendezvous::Args());
-  rendezvous->Unref();
+  rendezvous->Unref(114);
   if (!s.ok()) {
     // Failing to fetch the outputs should not be possible, so rewrite the error
     // status to an INTERNAL error.
@@ -399,7 +399,7 @@ void GraphMgr::RecvOutputsAsync(const int64 step_id, NamedTensors* out,
   RecvOutputsFromRendezvousAsync(
       rendezvous, nullptr, {}, keys, received_keys,
       [done, rendezvous, received_keys, out, keys](const Status s) {
-        rendezvous->Unref();
+        rendezvous->Unref(115);
         size_t output_size = 0;
         for (int i = 0; i < keys.size(); ++i) {
           (*out)[keys[i]] = (*received_keys)[i];
@@ -477,8 +477,8 @@ void GraphMgr::ExecuteAsync(const string& handle, const int64 step_id,
     done(s);
     delete activity;
     delete ce_handle;
-    item->Unref();
-    rendezvous->Unref();
+    item->Unref(116);
+    rendezvous->Unref(117);
     return;
   }
 
@@ -490,8 +490,8 @@ void GraphMgr::ExecuteAsync(const string& handle, const int64 step_id,
                            metrics::RecordGraphInputTensors(input_size);
                            metrics::UpdateGraphExecTime(
                                Env::Default()->NowMicros() - start_time_usecs);
-                           rendezvous->Unref();
-                           item->Unref();
+                           rendezvous->Unref(118);
+                           item->Unref(119);
                            delete activity;
                            delete ce_handle;
                          });

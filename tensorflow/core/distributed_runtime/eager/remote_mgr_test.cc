@@ -60,7 +60,7 @@ class RemoteMgrTest : public ::testing::Test {
         nullptr);
   }
 
-  ~RemoteMgrTest() override { ctx_->Unref(); }
+  ~RemoteMgrTest() override { ctx_->Unref(96); }
 
   Device* local_device_;
   Device* remote_device_;

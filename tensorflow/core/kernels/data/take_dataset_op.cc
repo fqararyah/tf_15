@@ -46,7 +46,7 @@ TakeDataset::TakeDataset(DatasetContext::Params params, int64 count,
   input_->Ref();
 }
 
-TakeDataset::~TakeDataset() { input_->Unref(); }
+TakeDataset::~TakeDataset() { input_->Unref(244); }
 
 const DataTypeVector& TakeDataset::output_dtypes() const {
   return input_->output_dtypes();

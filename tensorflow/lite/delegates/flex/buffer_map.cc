@@ -168,7 +168,7 @@ void BufferMap::SetFromTfLite(int tensor_index, const TfLiteTensor* tensor) {
   }
   tensorflow::Tensor t = tensorflow::TensorCApi::MakeTensor(
       GetTensorFlowDataType(tensor->type), shape, buf);
-  buf->Unref();
+  buf->Unref(172);
 
   id_to_tensor_[tensor_index] = std::move(t);
   owned_by_tf_.erase(tensor_index);

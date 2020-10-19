@@ -68,7 +68,7 @@ class BatchDatasetOp::Dataset : public DatasetBase {
     }
   }
 
-  ~Dataset() override { input_->Unref(); }
+  ~Dataset() override { input_->Unref(209); }
 
   std::unique_ptr<IteratorBase> MakeIteratorInternal(
       const string& prefix) const override {

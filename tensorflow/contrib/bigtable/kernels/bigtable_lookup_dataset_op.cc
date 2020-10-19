@@ -75,8 +75,8 @@ class BigtableLookupDatasetOp : public UnaryDatasetOpKernel {
     }
 
     ~Dataset() override {
-      table_->Unref();
-      input_->Unref();
+      table_->Unref(17);
+      input_->Unref(18);
     }
 
     std::unique_ptr<IteratorBase> MakeIteratorInternal(

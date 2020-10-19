@@ -289,7 +289,7 @@ void EagerContext::WaitForAndCloseRemoteContexts() {
 EagerContext::~EagerContext() {
   ClearCaches();
   for (auto& entry : registered_functions_) {
-    while (!entry.second->Unref()) {
+    while (!entry.second->Unref(29)) {
       // remove all references.
     }
   }
@@ -314,7 +314,7 @@ EagerContext::~EagerContext() {
   }
 #endif  // !IS_MOBILE_PLATFORM
 
-  rendezvous_->Unref();
+  rendezvous_->Unref(30);
 }
 
 bool EagerContext::FindFunctionByName(const string& name) {
@@ -450,7 +450,7 @@ Status EagerContext::RemoveFunction(const string& func) {
       }
       registered_functions_.erase(func);
     }
-    registered_function->Unref();
+    registered_function->Unref(31);
   }
   if (is_last_ref) {
     // TODO(fishx): Remove remote function as well.
@@ -670,7 +670,7 @@ Status EagerContext::InitializeRemoteMaster(
   devices_ = local_unowned_device_manager_->ListDevices();
   devices_map_.clear();
 
-  if (rendezvous_ != nullptr) rendezvous_->Unref();
+  if (rendezvous_ != nullptr) rendezvous_->Unref(32);
   rendezvous_ = r;
 
   // Memory leak!

@@ -190,7 +190,7 @@ struct Helper<tstring> {
     Buffer<tstring>* buf = new Buffer<tstring>(a, n);
     tstring* strings = buf->template base<tstring>();
     if (strings == nullptr || !port::DecodeStringList(in, strings, n)) {
-      buf->Unref();
+      buf->Unref(151);
       return nullptr;
     }
     return buf;
@@ -229,7 +229,7 @@ struct Helper<ResourceHandle> {
     ResourceHandle* ps = buf->template base<ResourceHandle>();
     if (ps == nullptr ||
         !DecodeResourceHandleList(port::NewStringListDecoder(in), ps, n)) {
-      buf->Unref();
+      buf->Unref(152);
       return nullptr;
     }
     return buf;
@@ -261,7 +261,7 @@ struct Helper<Variant> {
     Variant* ps = buf->template base<Variant>();
     if (ps == nullptr ||
         !DecodeVariantList(port::NewStringListDecoder(in), ps, n)) {
-      buf->Unref();
+      buf->Unref(153);
       return nullptr;
     }
     return buf;
@@ -511,7 +511,7 @@ TensorBuffer* FromProtoField<Variant>(Allocator* a, const TensorProto& in,
   Buffer<Variant>* buf = new Buffer<Variant>(a, n);
   Variant* data = buf->template base<Variant>();
   if (data == nullptr) {
-    buf->Unref();
+    buf->Unref(154);
     return nullptr;
   }
   const int64 in_n = ProtoHelper<Variant>::NumElements(in);
@@ -530,7 +530,7 @@ TensorBuffer* FromProtoField<Variant>(Allocator* a, const TensorProto& in,
                    << data[i].TypeName()
                    << "\".  Perhaps you forgot to register a "
                       "decoder via REGISTER_UNARY_VARIANT_DECODE_FUNCTION?";
-        buf->Unref();
+        buf->Unref(155);
         return nullptr;
       }
     }
@@ -551,7 +551,7 @@ TensorBuffer* FromProtoField<Eigen::half>(Allocator* a, const TensorProto& in,
   Buffer<Eigen::half>* buf = new Buffer<Eigen::half>(a, n);
   uint16* data = buf->template base<uint16>();
   if (data == nullptr) {
-    buf->Unref();
+    buf->Unref(156);
     return nullptr;
   }
   const int64 in_n = in.half_val().size();
@@ -575,7 +575,7 @@ TensorBuffer* FromProtoField<bfloat16>(Allocator* a, const TensorProto& in,
   Buffer<bfloat16>* buf = new Buffer<bfloat16>(a, n);
   uint16* data = buf->template base<uint16>();
   if (data == nullptr) {
-    buf->Unref();
+    buf->Unref(157);
     return nullptr;
   }
   const int64 in_n = in.half_val().size();
@@ -617,7 +617,7 @@ void UnrefIfNonNull(core::RefCounted* buf) {
   fout<<"ifnotnull::"<<"\n";  
   fout.close();
   //*fareed
-    buf->Unref();
+    buf->Unref(158);
   }
 }
 
@@ -842,7 +842,7 @@ class SubBuffer : public TensorBuffer {
     fout<<"sub::"<<"\n";  
     fout.close();
     //*fareed
-    root_->Unref();  
+    root_->Unref(159);
   }
 
   TF_DISALLOW_COPY_AND_ASSIGN(SubBuffer);

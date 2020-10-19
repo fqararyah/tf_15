@@ -129,7 +129,7 @@ ScopedAllocatorMgr::~ScopedAllocatorMgr() {
     fout<<"scoped_mgr::"<<"\n";  
     fout.close();
     //*fareed
-    while (!it.second->Unref()) {
+    while (!it.second->Unref(77)) {
     }
   }
 }
@@ -145,7 +145,7 @@ void ScopedAllocatorMgr::Cleanup(int64 step_id) {
     fout<<"scoped_mgr::"<<"\n";  
     fout.close();
     //*fareed
-    it->second->Unref();
+    it->second->Unref(78);
     per_step_map_.erase(it);
   }
 }

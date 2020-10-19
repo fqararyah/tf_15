@@ -59,7 +59,7 @@ class DatasetVariantWrapper {
   DatasetVariantWrapper& operator=(const DatasetVariantWrapper& other) = delete;
 
   ~DatasetVariantWrapper() {
-    if (dataset_) dataset_->Unref();
+    if (dataset_) dataset_->Unref(139);
   }
 
   DatasetBase* get() const { return dataset_; }

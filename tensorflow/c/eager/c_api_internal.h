@@ -82,7 +82,7 @@ struct TFE_Context {
     context->WaitForAndCloseRemoteContexts();
     // context->RefCountIsOne() should be true here.
     // TODO(iga): Remove EagerContext refcounting.
-    context->Unref();
+    context->Unref(1);
   }
 
   tensorflow::EagerContext* context;
@@ -283,7 +283,7 @@ struct TFE_TraceContext {
   ~TFE_TraceContext() {
     delete input_tensors;
     for (auto input : input_tensor_map) {
-      input.first->Unref();
+      input.first->Unref(2);
     }
   }
 };

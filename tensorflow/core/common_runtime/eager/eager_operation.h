@@ -36,7 +36,7 @@ class EagerOperation {
 
   ~EagerOperation() {
     for (tensorflow::TensorHandle* h : inputs_) {
-      h->Unref();
+      h->Unref(35);
     }
   }
 

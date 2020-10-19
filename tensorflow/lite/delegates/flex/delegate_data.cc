@@ -24,7 +24,7 @@ namespace flex {
 DelegateData::DelegateData() {}
 
 DelegateData::~DelegateData() {
-  if (eager_context_) eager_context_->Unref();
+  if (eager_context_) eager_context_->Unref(173);
 }
 
 tensorflow::Status DelegateData::Prepare(

@@ -49,7 +49,7 @@ class ExecutorTest : public ::testing::Test {
   ~ExecutorTest() override {
     // There should always be exactly one Ref left on the Rendezvous
     // when the test completes.
-    CHECK(rendez_->Unref());
+    CHECK(rendez_->Unref(242));
     delete exec_;
   }
 

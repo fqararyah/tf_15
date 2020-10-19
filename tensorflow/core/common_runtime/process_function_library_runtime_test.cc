@@ -109,7 +109,7 @@ class ProcessFunctionLibraryRuntimeTest : public ::testing::Test {
 
   ~ProcessFunctionLibraryRuntimeTest() override {
     if (rendezvous_ != nullptr) {
-      rendezvous_->Unref();
+      rendezvous_->Unref(61);
     }
   }
 

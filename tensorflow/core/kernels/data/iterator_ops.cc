@@ -276,7 +276,7 @@ IteratorHandleOp::IteratorHandleOp(OpKernelConstruction* ctx)
 // by anyone, but it would break backward compatibility.
 IteratorHandleOp::~IteratorHandleOp() {
   if (resource_ != nullptr) {
-    resource_->Unref();
+    resource_->Unref(220);
     if (cinfo_.resource_is_private_to_kernel()) {
       if (!cinfo_.resource_manager()
                ->template Delete<IteratorResource>(cinfo_.container(),
@@ -326,7 +326,7 @@ void IteratorHandleOp::Compute(OpKernelContext* context) LOCKS_EXCLUDED(mu_) {
 
       Status s = VerifyResource(resource);
       if (TF_PREDICT_FALSE(!s.ok())) {
-        resource->Unref();
+        resource->Unref(221);
         context->SetStatus(s);
         return;
       }
@@ -403,7 +403,7 @@ void MakeIteratorOp::ComputeAsync(OpKernelContext* ctx, DoneCallback done) {
   background_worker_.Schedule(std::bind(
       [ctx, iterator_resource, dataset](DoneCallback done) {
         Status s = iterator_resource->SetIteratorFromDataset(ctx, dataset);
-        iterator_resource->Unref();
+        iterator_resource->Unref(222);
         if (!s.ok()) {
           ctx->SetStatus(s);
         }
@@ -722,7 +722,7 @@ class OneShotIteratorOp : public AsyncOpKernel {
 
   ~OneShotIteratorOp() override {
     if (iterator_resource_ != nullptr) {
-      iterator_resource_->Unref();
+      iterator_resource_->Unref(223);
       if (!cinfo_.resource_manager()
                ->Delete<IteratorResource>(cinfo_.container(), cinfo_.name())
                .ok()) {
@@ -902,7 +902,7 @@ void IteratorGetNextOp::ComputeAsync(OpKernelContext* ctx, DoneCallback done) {
         Status s = iterator->GetNext(ctx, &components, &end_of_sequence);
         // NOTE(mrry): We must unref the iterator before calling `done()`, to
         // avoid destruction races.
-        iterator->Unref();
+        iterator->Unref(224);
 
         if (!s.ok()) {
           ctx->SetStatus(s);
@@ -951,7 +951,7 @@ void IteratorGetNextAsOptionalOp::ComputeAsync(OpKernelContext* ctx,
         Status s = iterator->GetNext(ctx, &components, &end_of_sequence);
         // NOTE(mrry): We must unref the iterator before calling `done()`, to
         // avoid destruction races.
-        iterator->Unref();
+        iterator->Unref(225);
 
         if (!s.ok()) {
           ctx->SetStatus(s);
@@ -997,7 +997,7 @@ void IteratorToStringHandleOp::Compute(OpKernelContext* ctx) {
   IteratorResource* iterator_resource;
   OP_REQUIRES_OK(
       ctx, LookupResource(ctx, HandleFromInput(ctx, 0), &iterator_resource));
-  iterator_resource->Unref();
+  iterator_resource->Unref(226);
 
   Tensor* string_handle_t;
   OP_REQUIRES_OK(ctx,

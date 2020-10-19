@@ -212,7 +212,7 @@ Status ValidateInputTypeAndPlacement(
         op, kernel->device(), i, expected_device, &handle));
     op->UpdateInput(i, handle);
     // Unref handle since it has a ref as an input now
-    handle->Unref();
+    handle->Unref(36);
     if (handle->dtype != kernel->input_type(i)) {
       return errors::InvalidArgument(
           "cannot compute ", op->Name(), " as input #", i, "(zero-based)",
@@ -496,7 +496,7 @@ Status EagerLocalExecute(EagerOperation* op, TensorHandle** retvals,
             ctx->MirrorTensors(), &handle));
         op->UpdateInput(i, handle);
         // Unref handle since it has a ref as an input now
-        handle->Unref();
+        handle->Unref(37);
         input = handle;
       }
 
@@ -655,7 +655,7 @@ Status EagerLocalExecute(EagerOperation* op, TensorHandle** retvals,
   // allocated.
   if (!s.ok()) {
     for (int i = 0; i < num_outputs; ++i) {
-      retvals[i]->Unref();
+      retvals[i]->Unref(38);
     }
   }
 
@@ -723,7 +723,7 @@ Status EagerRemoteExecute(EagerOperation* op, TensorHandle** retvals,
         input_device = remote_cpu_device;
         input_device_name = &remote_cpu_device->name();
         // Unref handle since it has a ref as an input now
-        handle->Unref();
+        handle->Unref(39);
       }
 
       TF_RETURN_IF_ERROR(ctx->RemoteMgr()->SerializeRemoteTensorHandle(
@@ -783,7 +783,7 @@ Status EagerRemoteExecute(EagerOperation* op, TensorHandle** retvals,
   // allocated.
   if (!s.ok()) {
     for (int i = 0; i < num_outputs; ++i) {
-      retvals[i]->Unref();
+      retvals[i]->Unref(40);
     }
   }
 
@@ -1045,7 +1045,7 @@ Status LocalEagerCopyToDevice(TensorHandle* h, EagerContext* ctx,
   // Since the operation failed, we need to Unref any outputs that were
   // allocated.
   if (!s.ok()) {
-    (*result)->Unref();
+    (*result)->Unref(41);
   }
 
   return s;
@@ -1104,7 +1104,7 @@ Status EagerCopyToDevice(TensorHandle* h, EagerContext* ctx,
         ctx, executor, h, result[0], device, recv_op_id);
     Status s = executor->Async() ? executor->Add(std::move(node)) : node->Run();
     if (!s.ok()) {
-      result[0]->Unref();
+      result[0]->Unref(42);
     }
     return s;
 #endif  // !IS_MOBILE_PLATFORM

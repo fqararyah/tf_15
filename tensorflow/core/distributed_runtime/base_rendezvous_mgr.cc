@@ -39,7 +39,7 @@ namespace tensorflow {
 
 static void StartAbortRendevous(Rendezvous* rendez, const Status& s) {
   rendez->StartAbort(s);
-  rendez->Unref();
+  rendez->Unref(106);
 }
 
 BaseRendezvousMgr::BaseRendezvousMgr(const WorkerEnv* worker_env)
@@ -77,7 +77,7 @@ void BaseRendezvousMgr::RecvLocalAsync(int64 step_id,
                // Begin unbound arguments.
                const Status& s, const Rendezvous::Args& send_args,
                const Rendezvous::Args& recv_args, const Tensor& v, bool dead) {
-        rendez->Unref();
+        rendez->Unref(107);
         done(s, send_args, recv_args, v, dead);
       },
       std::move(done), _1, _2, _3, _4, _5);
@@ -140,7 +140,7 @@ BaseRemoteRendezvous::BaseRemoteRendezvous(const WorkerEnv* env, int64 step_id)
 
 BaseRemoteRendezvous::~BaseRemoteRendezvous() {
   CHECK(active_.empty());
-  local_->Unref();
+  local_->Unref(108);
 }
 
 // Returns true if "device_name" is a valid full name of local device

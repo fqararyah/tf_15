@@ -139,7 +139,7 @@ TF_Tensor* TF_NewTensor(TF_DataType dtype, const int64_t* dims, int num_dims,
   TF_Tensor* ret =
       new TF_Tensor{Tensor(static_cast<tensorflow::DataType>(dtype),
                            tensorflow::TensorShape(dimvec), buf)};
-  buf->Unref();
+  buf->Unref(6);
   size_t elem_size = TF_DataTypeSize(dtype);
   if (elem_size > 0 && len < (elem_size * ret->tensor.NumElements())) {
     delete ret;

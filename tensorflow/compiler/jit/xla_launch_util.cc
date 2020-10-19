@@ -79,7 +79,7 @@ VariableInfo::~VariableInfo() {
     }
 
     // Unref the variable so it can be released by ResourceManager.
-    var()->Unref();
+    var()->Unref(7);
   }
 }
 

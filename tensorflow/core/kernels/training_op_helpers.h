@@ -90,7 +90,7 @@ struct VariableInputLockHolder {
     // is potentially borrowed from a Var in vars_.
     locks_.reset();
     for (Var* var : vars_) {
-      var->Unref();
+      var->Unref(270);
     }
   }
 

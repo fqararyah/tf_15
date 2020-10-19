@@ -145,7 +145,7 @@ class MasterSession::ReffedClientGraph : public core::RefCounted {
         // ensure that the method doesn't attempt to access p.worker after
         // ReffedClient graph has deleted it.
         // TODO(suharshs): Simplify this ownership model.
-        Unref();
+        Unref(120);
       });
     }
   }
@@ -1212,8 +1212,8 @@ MasterSession::MasterSession(
 }
 
 MasterSession::~MasterSession() {
-  for (const auto& iter : run_graphs_) iter.second->Unref();
-  for (const auto& iter : partial_run_graphs_) iter.second->Unref();
+  for (const auto& iter : run_graphs_) iter.second->Unref(121);
+  for (const auto& iter : partial_run_graphs_) iter.second->Unref(122);
 }
 
 void MasterSession::UpdateLastAccessTime() {
@@ -1501,7 +1501,7 @@ void MasterSession::ClearRunsTable(std::vector<ReffedClientGraph*>* to_unref,
     if (to_unref) {
       to_unref->push_back(rcg);
     } else {
-      rcg->Unref();
+      rcg->Unref(123);
     }
   }
   rcg_map->clear();
@@ -1769,9 +1769,9 @@ Status MasterSession::DoPartialRun(CallOptions* opts,
           if (!s.ok()) {
             LOG(ERROR) << "Cleanup partition error: " << s;
           }
-          rcg->Unref();
+          rcg->Unref(124);
           MarkRunCompletion();
-          Unref();
+          Unref(125);
         });
     mutex_lock l(mu_);
     partial_runs_.erase(prun_handle);
@@ -1874,9 +1874,9 @@ Status MasterSession::PostRunCleanup(MasterSession::ReffedClientGraph* rcg,
     if (!s.ok()) {
       LOG(ERROR) << "Cleanup partition error: " << s;
     }
-    rcg->Unref();
+    rcg->Unref(126);
     MarkRunCompletion();
-    Unref();
+    Unref(127);
   });
   return s;
 }
@@ -1949,7 +1949,7 @@ Status MasterSession::MakeCallable(const MakeCallableRequest& req,
 
   Status s = BuildAndRegisterPartitions(callable);
   if (!s.ok()) {
-    callable->Unref();
+    callable->Unref(128);
     return s;
   }
 
@@ -2033,7 +2033,7 @@ Status MasterSession::ReleaseCallable(const ReleaseCallableRequest& req,
     }
   }
   if (to_unref != nullptr) {
-    to_unref->Unref();
+    to_unref->Unref(129);
   }
   return Status::OK();
 }
@@ -2054,7 +2054,7 @@ Status MasterSession::Close() {
     ClearRunsTable(&to_unref, &partial_run_graphs_);
     ClearRunsTable(&to_unref, &callables_);
   }
-  for (ReffedClientGraph* rcg : to_unref) rcg->Unref();
+  for (ReffedClientGraph* rcg : to_unref) rcg->Unref(130);
   if (should_delete_worker_sessions_) {
     Status s = DeleteWorkerSessions();
     if (!s.ok()) {
@@ -2071,7 +2071,7 @@ void MasterSession::GarbageCollect() {
     garbage_collected_ = true;
   }
   cancellation_manager_.StartCancel();
-  Unref();
+  Unref(131);
 }
 
 MasterSession::RunState::RunState(const std::vector<string>& input_names,
@@ -2089,7 +2089,7 @@ MasterSession::RunState::RunState(const std::vector<string>& input_names,
 }
 
 MasterSession::RunState::~RunState() {
-  if (rcg) rcg->Unref();
+  if (rcg) rcg->Unref(132);
 }
 
 bool MasterSession::RunState::PendingDone() const {

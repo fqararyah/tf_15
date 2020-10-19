@@ -115,8 +115,8 @@ class SetStatsAggregatorDatasetOp : public UnaryDatasetOpKernel {
     }
 
     ~Dataset() override {
-      input_->Unref();
-      stats_aggregator_resource_->Unref();
+      input_->Unref(193);
+      stats_aggregator_resource_->Unref(194);
     }
 
     std::unique_ptr<IteratorBase> MakeIteratorInternal(

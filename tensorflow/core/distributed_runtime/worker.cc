@@ -111,7 +111,7 @@ void Worker::AbortStep(int64 step_id) {
     // cancellation generated abort error.
     rendez->StartAbort(errors::Aborted("Step ", step_id,
                                        " cancelled.  Cancelling rendezvous."));
-    rendez->Unref();
+    rendez->Unref(137);
   });
 }
 

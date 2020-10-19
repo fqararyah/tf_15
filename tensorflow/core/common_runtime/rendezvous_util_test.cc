@@ -25,7 +25,7 @@ class RendezvousUtilTest : public ::testing::Test {
  public:
   RendezvousUtilTest() { rendez_ = NewLocalRendezvous(); }
 
-  ~RendezvousUtilTest() override { rendez_->Unref(); }
+  ~RendezvousUtilTest() override { rendez_->Unref(70); }
 
   Rendezvous* rendez_;
 };

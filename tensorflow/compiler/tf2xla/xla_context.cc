@@ -50,7 +50,7 @@ const char XlaContext::kXlaContextResourceName[] = "_xla_context";
   // The resource manager handed us a fresh reference to 'context', but retains
   // a reference itself so the context won't be freed. The resource manager will
   // outlive the JIT compilation.
-  context->Unref();
+  context->Unref(10);
   return *context;
 }
 

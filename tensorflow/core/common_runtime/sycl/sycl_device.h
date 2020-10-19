@@ -101,7 +101,7 @@ class GSYCLInterface {
     m_sycl_allocator_.clear();
 
     for (auto p : m_sycl_context_) {
-      p->Unref();
+      p->Unref(46);
     }
     m_sycl_context_.clear();
 

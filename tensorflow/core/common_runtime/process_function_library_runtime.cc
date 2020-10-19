@@ -937,7 +937,7 @@ void ProcessFunctionLibraryRuntime::RunMultiDevice(
                  }
                  delete comp_rets;
                  // refcounted_done is thread-safe
-                 refcounted_done->Unref();
+                 refcounted_done->Unref(62);
                });
     } else {
       opts_copy.remote_execution = true;
@@ -958,11 +958,11 @@ void ProcessFunctionLibraryRuntime::RunMultiDevice(
             }
             delete comp_rets;
             // refcounted_done is thread-safe
-            refcounted_done->Unref();
+            refcounted_done->Unref(63);
           });
     }
   }
-  refcounted_done->Unref();
+  refcounted_done->Unref(64);
 }
 
 Status ProcessFunctionLibraryRuntime::Instantiate(
@@ -1259,7 +1259,7 @@ void ProcessFunctionLibraryRuntime::CleanUp(
       // TODO(fishx): cleanup state for local execution.
       refcounted_done->UpdateStatus(
           errors::Internal("Cleanup items shouldn't contain local item."));
-      refcounted_done->Unref();
+      refcounted_done->Unref(65);
     } else if (parent_ != nullptr) {
       parent_->CleanUp(item->step_id, item->local_handle,
                        [refcounted_done](const Status& status) {
@@ -1267,15 +1267,15 @@ void ProcessFunctionLibraryRuntime::CleanUp(
                            refcounted_done->UpdateStatus(status);
                          }
                          // refcounted_done is thread-safe
-                         refcounted_done->Unref();
+                         refcounted_done->Unref(66);
                        });
     } else {
       refcounted_done->UpdateStatus(
           errors::Internal("Could not find device in cleanup."));
-      refcounted_done->Unref();
+      refcounted_done->Unref(67);
     }
   }
-  refcounted_done->Unref();
+  refcounted_done->Unref(68);
 }
 
 Status ProcessFunctionLibraryRuntime::Clone(

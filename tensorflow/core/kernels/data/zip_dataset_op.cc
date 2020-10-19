@@ -50,7 +50,7 @@ class ZipDatasetOp::Dataset : public DatasetBase {
 
   ~Dataset() override {
     for (const auto& input : inputs_) {
-      input->Unref();
+      input->Unref(246);
     }
   }
 

@@ -33,7 +33,7 @@ class SqliteTest : public ::testing::Test {
     db_->PrepareOrDie("CREATE TABLE T (a BLOB, b BLOB)").StepAndResetOrDie();
   }
 
-  void TearDown() override { db_->Unref(); }
+  void TearDown() override { db_->Unref(163); }
 
   Sqlite* db_;
   bool is_done_;

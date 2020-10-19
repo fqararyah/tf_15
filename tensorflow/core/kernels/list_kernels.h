@@ -105,7 +105,7 @@ class TensorList {
     element_shape = rhs.element_shape;
     element_dtype = rhs.element_dtype;
     max_num_elements = rhs.max_num_elements;
-    tensors_->Unref();
+    tensors_->Unref(258);
     tensors_ = rhs.tensors_;
     tensors_->Ref();
     return *this;

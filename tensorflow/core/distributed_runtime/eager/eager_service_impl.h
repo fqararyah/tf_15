@@ -53,7 +53,7 @@ class EagerServiceImpl {
               mutex_lock l(contexts_mu_);
               for (auto it = contexts_.begin(); it != contexts_.end();) {
                 if (it->second->IsStale()) {
-                  it->second->Unref();
+                  it->second->Unref(87);
                   it = contexts_.erase(it);
                 } else {
                   it++;
@@ -73,7 +73,7 @@ class EagerServiceImpl {
 
     mutex_lock l(contexts_mu_);
     for (auto& entry : contexts_) {
-      entry.second->Unref();
+      entry.second->Unref(88);
     }
   }
 
@@ -131,7 +131,7 @@ class EagerServiceImpl {
       }
       // ctx_->RefCountIsOne() should be true here when is_master_ = false.
       // TODO(iga): Remove EagerContext refcounting.
-      ctx_->Unref();
+      ctx_->Unref(89);
     }
 
     tensorflow::EagerContext* Context() const { return ctx_; }
@@ -174,7 +174,7 @@ class EagerServiceImpl {
       context_->Ref();
     }
 
-    ~ClientTensorHandleDeleteNode() override { context_->Unref(); }
+    ~ClientTensorHandleDeleteNode() override { context_->Unref(90); }
 
     Status Run() override {
       VLOG(3) << "ServerContext: Deleting tensor handle "

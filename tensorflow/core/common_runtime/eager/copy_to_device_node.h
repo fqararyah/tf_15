@@ -33,8 +33,8 @@ class CopyToDeviceNode : public EagerNode {
   }
 
   ~CopyToDeviceNode() override {
-    src_->Unref();
-    dst_->Unref();
+    src_->Unref(33);
+    dst_->Unref(34);
   }
 
   Status Run() override {

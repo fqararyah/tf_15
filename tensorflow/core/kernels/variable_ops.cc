@@ -75,7 +75,7 @@ void VariableOp::Compute(OpKernelContext* ctx) {
   if (ctx->track_allocations() && var->tensor()->IsInitialized()) {
     ctx->record_persistent_memory_allocation(var->tensor()->AllocatedBytes());
   }
-  var->Unref();
+  var->Unref(271);
 }
 
 class TemporaryVariableOp : public OpKernel {
@@ -98,7 +98,7 @@ class TemporaryVariableOp : public OpKernel {
                 errors::ResourceExhausted("Could not allocate TmpVar."));
     tmp_var->name = var_name_;
     s = context->allocate_temp(dtype_, shape_, &tmp_var->val);
-    if (!s.ok()) tmp_var->Unref();
+    if (!s.ok()) tmp_var->Unref(272);
     OP_REQUIRES_OK(context, s);
     OP_REQUIRES_OK(context, rm->Create(context->step_container()->name(),
                                        var_name_, tmp_var));

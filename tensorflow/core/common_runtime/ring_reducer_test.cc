@@ -152,7 +152,7 @@ class RingReducerTest : public ::testing::Test {
   ~RingReducerTest() override {
     stop_ = true;
     for (auto i : instances_) delete i;
-    if (col_exec_) col_exec_->Unref();
+    if (col_exec_) col_exec_->Unref(75);
   }
 
   void Init(int num_workers, int num_devices, DataType dtype,
@@ -528,7 +528,7 @@ class RingReducerTest : public ::testing::Test {
         CHECK(tensor_.CopyFrom(*ctx.mutable_output(0), tensor_.shape()));
       }
 
-      dev_ctx->Unref();
+      dev_ctx->Unref(76);
     }
 
     const Tensor& tensor() { return tensor_; }

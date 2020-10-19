@@ -90,7 +90,7 @@ class DenseToSparseBatchDatasetOp : public UnaryDatasetOpKernel {
       output_shapes_.push_back(output_shape);
     }
 
-    ~Dataset() override { input_->Unref(); }
+    ~Dataset() override { input_->Unref(180); }
 
     std::unique_ptr<IteratorBase> MakeIteratorInternal(
         const string& prefix) const override {

@@ -175,7 +175,7 @@ void ConditionalAccumulatorBase::FlushUnlocked() {
       changed = TryAttemptLocked(&clean_up);
     } while (changed);
   }
-  Unref();
+  Unref(256);
   for (const auto& to_clean : clean_up) {
     if (to_clean.to_deregister != CancellationManager::kInvalidToken) {
       // NOTE(mrry): We can safely ignore the return value of

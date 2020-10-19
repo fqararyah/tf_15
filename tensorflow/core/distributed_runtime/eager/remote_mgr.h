@@ -34,7 +34,7 @@ class RemoteMgr {
 
   ~RemoteMgr() {
     for (const auto& entry : remote_tensor_handle_map_) {
-      entry.second->Unref();
+      entry.second->Unref(98);
     }
   }
 

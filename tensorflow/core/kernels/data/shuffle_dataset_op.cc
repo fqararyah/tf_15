@@ -83,7 +83,7 @@ class ShuffleDatasetOpBase::ShuffleDatasetBase : public DatasetBase {
     input_->Ref();
   }
 
-  ~ShuffleDatasetBase() override { input_->Unref(); }
+  ~ShuffleDatasetBase() override { input_->Unref(239); }
 
   const DataTypeVector& output_dtypes() const override {
     return input_->output_dtypes();
@@ -422,7 +422,7 @@ class ShuffleDatasetOp::ReshufflingDataset : public ShuffleDatasetBase {
         : ShuffleDatasetBase::Iterator<ReshufflingDataset>(params, seed,
                                                            seed2) {}
 
-    ~Iterator() override { seed_generator_->Unref(); }
+    ~Iterator() override { seed_generator_->Unref(240); }
 
     Status Initialize(IteratorContext* ctx) override {
       // Firstly, lookup or create a seed generator from the IteratorResource
@@ -533,7 +533,7 @@ class ShuffleDatasetOp::ReshufflingDatasetV2 : public ShuffleDatasetBase {
         resource_handle_(resource_handle),
         seed_generator_(seed_generator) {}
 
-  ~ReshufflingDatasetV2() override { seed_generator_->Unref(); }
+  ~ReshufflingDatasetV2() override { seed_generator_->Unref(241); }
 
   string DebugString() const override {
     name_utils::DatasetDebugStringParams params;

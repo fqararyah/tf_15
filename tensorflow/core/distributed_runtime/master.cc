@@ -479,7 +479,7 @@ void Master::CreateSession(const CreateSessionRequest* req,
     status = session->Create(std::move(*gdef), worker_cache_factory_options);
     if (!status.ok()) {
       session->Close().IgnoreError();
-      session->Unref();
+      session->Unref(133);
       return;
     }
     resp->set_session_handle(session->handle());
@@ -547,7 +547,7 @@ void Master::RunStep(CallOptions* opts, const RunStepRequestWrapper* req,
 
   SchedClosure([this, start_time, session, opts, req, resp, done]() {
     Status status = session->Run(opts, *req, resp);
-    session->Unref();
+    session->Unref(134);
     uint64 done_time = env_->env->NowMicros();
     done(status);
     mutex_lock l(mu_);
@@ -580,7 +580,7 @@ void Master::CloseSession(const CloseSessionRequest* req,
   // delete it in non-critical thread.
   SchedClosure([session, done]() {
     Status s = session->Close();
-    session->Unref();
+    session->Unref(135);
     done(s);
   });
 }
@@ -669,7 +669,7 @@ void Master::Reset(const ResetRequest* req, ResetResponse* resp,
     Status s;
     for (MasterSession* session : sessions_to_close) {
       s.Update(session->Close());
-      session->Unref();
+      session->Unref(136);
     }
     done(s);
   });

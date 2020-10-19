@@ -1437,7 +1437,7 @@ ExecutorState::~ExecutorState() {
     delete name_frame.second;
   }
   for (auto it : device_context_map_) {
-    it->Unref();
+    it->Unref(54);
   }
   delete slice_reader_cache_;
 }

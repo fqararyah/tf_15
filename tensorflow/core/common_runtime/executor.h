@@ -220,7 +220,7 @@ class ExecutorBarrier {
     if (error_rendez != nullptr) {
       error_rendez->StartAbort(
           errors::Aborted("Stopping remaining executors."));
-      error_rendez->Unref();
+      error_rendez->Unref(55);
     }
 
     if (done != nullptr) {

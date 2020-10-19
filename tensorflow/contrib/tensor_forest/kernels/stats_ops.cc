@@ -57,7 +57,7 @@ class CreateFertileStatsVariableOp : public OpKernel {
     auto* result = new FertileStatsResource(param_proto_);
     FertileStats stats;
     if (!ParseProtoUnlimited(&stats, stats_config_t->scalar<tstring>()())) {
-      result->Unref();
+      result->Unref(27);
       OP_REQUIRES(context, false,
                   errors::InvalidArgument("Unable to parse stats config."));
     }

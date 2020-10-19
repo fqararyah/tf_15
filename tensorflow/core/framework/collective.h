@@ -316,7 +316,7 @@ class CollectiveExecutor : public PeerAccessInterface, public core::RefCounted {
     explicit Handle(CollectiveExecutor* ce, bool inherit_ref) : ce_(ce) {
       if (!inherit_ref) ce->Ref();
     }
-    ~Handle() { ce_->Unref(); }
+    ~Handle() { ce_->Unref(138); }
     CollectiveExecutor* get() const { return ce_; }
 
    private:

@@ -149,8 +149,8 @@ class ThreadPoolDatasetOp : public UnaryDatasetOpKernel {
     }
 
     ~Dataset() override {
-      input_->Unref();
-      threadpool_->Unref();
+      input_->Unref(203);
+      threadpool_->Unref(204);
     }
 
     std::unique_ptr<IteratorBase> MakeIteratorInternal(
@@ -262,7 +262,7 @@ class MaxIntraOpParallelismDatasetOp : public UnaryDatasetOpKernel {
       input_->Ref();
     }
 
-    ~Dataset() override { input_->Unref(); }
+    ~Dataset() override { input_->Unref(205); }
 
     std::unique_ptr<IteratorBase> MakeIteratorInternal(
         const string& prefix) const override {
@@ -366,7 +366,7 @@ class PrivateThreadPoolDatasetOp : public UnaryDatasetOpKernel {
       input_->Ref();
     }
 
-    ~Dataset() override { input_->Unref(); }
+    ~Dataset() override { input_->Unref(206); }
 
     std::unique_ptr<IteratorBase> MakeIteratorInternal(
         const string& prefix) const override {

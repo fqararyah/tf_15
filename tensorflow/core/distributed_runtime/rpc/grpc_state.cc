@@ -50,7 +50,7 @@ void UntypedStreamingRPCState::Tag::OnCompleted(bool ok) {
       streaming_state_->CallFinished(ok);
       break;
   }
-  streaming_state_->Unref();  // Ref acquired when tag was handed to grpc.
+  streaming_state_->Unref(103);  // Ref acquired when tag was handed to grpc.
 }
 
 void Exchange::Complete(Status status) {

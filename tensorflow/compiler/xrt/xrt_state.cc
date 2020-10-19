@@ -160,7 +160,7 @@ XRTTupleAllocation::~XRTTupleAllocation() { ReleaseBuffers(); }
 void XRTTupleAllocation::ReleaseBuffers() {
   for (auto& index_buffer : buffers_) {
     if (index_buffer.second != nullptr) {
-      index_buffer.second->Unref();
+      index_buffer.second->Unref(13);
       index_buffer.second = nullptr;
     }
   }
@@ -567,7 +567,7 @@ void XRTTupleAllocation::InitializeFromShapedBuffer(
     se::DeviceMemoryAllocator* allocator, int device_ordinal) {
   for (auto& index_buffer : buffers_) {
     if (index_buffer.second != nullptr) {
-      index_buffer.second->Unref();
+      index_buffer.second->Unref(14);
     }
     // Make a reference-counted version of the allocated buffer.
     index_buffer.second = new XRTBufferAllocation(
@@ -633,7 +633,7 @@ Status XRTTupleAllocation::AliasBufferFrom(const XRTTupleAllocation& source,
         dest_buffer != source_buffer) {
       dest_buffer->DiscardAllocation();
     }
-    dest_buffer->Unref();
+    dest_buffer->Unref(15);
   }
   return Status::OK();
 }

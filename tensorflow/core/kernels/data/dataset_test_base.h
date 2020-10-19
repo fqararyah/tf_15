@@ -238,7 +238,7 @@ class DatasetOpsTestBase : public ::testing::Test {
 
   ~DatasetOpsTestBase() {
     if (dataset_) {
-      dataset_->Unref();
+      dataset_->Unref(216);
     }
   }
 

@@ -285,7 +285,7 @@ Status KernelAndDeviceOp::Run(ScopedStepContainer* step_container,
   };
   params.dec_num_deferred_ops_function = [op_execution_state]() {
     if (op_execution_state != nullptr) {
-      op_execution_state->Unref();
+      op_execution_state->Unref(43);
     }
   };
   std::unique_ptr<StepStatsCollector> step_stats_collector;
@@ -330,7 +330,7 @@ Status KernelAndDeviceOp::Run(ScopedStepContainer* step_container,
 
   // Clean up execution op_execution_state if deferred ops aren't running.
   if (op_execution_state != nullptr) {
-    op_execution_state->Unref();
+    op_execution_state->Unref(44);
   }
 
   if (!context.status().ok()) return context.status();
@@ -400,7 +400,7 @@ Status KernelAndDeviceFunc::Run(
     done.WaitForNotification();
   }
 
-  rendezvous->Unref();
+  rendezvous->Unref(45);
   if (step_stats_collector != nullptr) {
     step_stats_collector->Finalize();
   }

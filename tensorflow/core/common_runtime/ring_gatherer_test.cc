@@ -130,7 +130,7 @@ class RingGathererTest : public ::testing::Test {
   ~RingGathererTest() override {
     stop_ = true;
     for (auto i : instances_) delete i;
-    if (col_exec_) col_exec_->Unref();
+    if (col_exec_) col_exec_->Unref(73);
   }
 
   void Init(int num_workers, int num_devices, DataType dtype,
@@ -499,7 +499,7 @@ class RingGathererTest : public ::testing::Test {
                                       ctx.mutable_output(0)->shape()));
       }
 
-      dev_ctx->Unref();
+      dev_ctx->Unref(74);
     }
 
     const Tensor& input_tensor() { return input_tensor_; }

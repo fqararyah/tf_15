@@ -37,7 +37,7 @@ CollectiveExecutorMgr::CollectiveExecutorMgr(
 
 CollectiveExecutorMgr::~CollectiveExecutorMgr() {
   for (auto iter : executor_table_) {
-    iter.second->Unref();
+    iter.second->Unref(47);
   }
 }
 
@@ -74,7 +74,7 @@ void CollectiveExecutorMgr::Cleanup(int64 step_id) {
       executor_table_.erase(it);
     }
   }
-  if (ce) ce->Unref();
+  if (ce) ce->Unref(48);
 }
 
 void CollectiveExecutorMgr::GetStepSequenceAsync(

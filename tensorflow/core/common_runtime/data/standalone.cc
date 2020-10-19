@@ -133,7 +133,7 @@ Dataset::Dataset(DatasetBase* dataset, DeviceMgr* device_mgr,
       absl::make_unique<FunctionHandleCache>(pflr_->GetFLR("/device:CPU:0"));
 }
 
-Dataset::~Dataset() { dataset_->Unref(); }
+Dataset::~Dataset() { dataset_->Unref(28); }
 
 }  // namespace standalone
 }  // namespace data

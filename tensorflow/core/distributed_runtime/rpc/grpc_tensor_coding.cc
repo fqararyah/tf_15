@@ -228,7 +228,7 @@ void EncodeTensorToByteBuffer(bool is_dead, const Tensor& val, bool require_ack,
       slices[1] = ::grpc::Slice(
           const_cast<void*>(static_cast<const void*>(tdata.data())),
           tdata.size(),
-          [](void* backing) { static_cast<TensorBuffer*>(backing)->Unref(); },
+          [](void* backing) { static_cast<TensorBuffer*>(backing)->Unref(104); },
           const_cast<TensorBuffer*>(buf));
       num_slices += 1;
     }

@@ -131,7 +131,7 @@ class StatsAggregatorImplV2 : public StatsAggregator {
 
   ~StatsAggregatorImplV2() override {
     if (summary_writer_interface_) {
-      summary_writer_interface_->Unref();
+      summary_writer_interface_->Unref(198);
     }
   }
 
@@ -181,7 +181,7 @@ class StatsAggregatorImplV2 : public StatsAggregator {
       SummaryWriterInterface* summary_writer_interface) override {
     mutex_lock l(mu_);
     if (summary_writer_interface_) {
-      summary_writer_interface_->Unref();
+      summary_writer_interface_->Unref(199);
       // If we create stats_aggregator twice in a program, we would end up with
       // already existing resource. In this case emitting an error if a
       // `summary_writer_resource` is present is not the intended behavior, we

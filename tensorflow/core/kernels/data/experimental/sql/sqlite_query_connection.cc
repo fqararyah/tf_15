@@ -26,7 +26,7 @@ namespace sql {
 SqliteQueryConnection::SqliteQueryConnection() {}
 
 SqliteQueryConnection::~SqliteQueryConnection() {
-  if (db_ != nullptr) db_->Unref();
+  if (db_ != nullptr) db_->Unref(175);
 }
 
 Status SqliteQueryConnection::Open(const string& data_source_name,
@@ -45,7 +45,7 @@ Status SqliteQueryConnection::Open(const string& data_source_name,
 
 Status SqliteQueryConnection::Close() {
   stmt_ = SqliteStatement();
-  db_->Unref();
+  db_->Unref(176);
   db_ = nullptr;
   return Status::OK();
 }

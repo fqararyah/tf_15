@@ -71,7 +71,7 @@ class LocalRendezvousTest : public ::testing::Test {
     rendez_ = NewLocalRendezvous();
   }
 
-  ~LocalRendezvousTest() override { rendez_->Unref(); }
+  ~LocalRendezvousTest() override { rendez_->Unref(141); }
 
   void SchedClosure(std::function<void()> fn) {
     threads_.Schedule(std::move(fn));
@@ -447,7 +447,7 @@ void BM_SendRecv(int iters) {
     }
     CHECK_EQ(V(val), V(orig));
   }
-  rendez->Unref();
+  rendez->Unref(142);
 }
 BENCHMARK(BM_SendRecv);
 

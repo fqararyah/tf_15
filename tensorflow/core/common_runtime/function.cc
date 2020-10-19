@@ -1115,7 +1115,7 @@ void FunctionLibraryRuntimeImpl::Run(const Options& opts, Handle handle,
         [rendezvous](DoneCallback done,
                      // Begin unbound arguments.
                      const Status& status) {
-          rendezvous->Unref();
+          rendezvous->Unref(56);
           done(status);
         },
         std::move(done), std::placeholders::_1);
@@ -1190,7 +1190,7 @@ void FunctionLibraryRuntimeImpl::Run(const Options& opts, Handle handle,
         [rendezvous](DoneCallback done,
                      // Begin unbound arguments.
                      const Status& status) {
-          rendezvous->Unref();
+          rendezvous->Unref(57);
           done(status);
         },
         std::move(done), std::placeholders::_1);

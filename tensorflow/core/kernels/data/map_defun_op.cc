@@ -229,12 +229,12 @@ void MapDefunOp::ComputeAsync(OpKernelContext* ctx, DoneCallback done) {
                                    delete c_mgr;
                                    delete call_frame;
                                    refcounted->UpdateStatus(func_status);
-                                   refcounted->Unref();
+                                   refcounted->Unref(228);
                                  });
   }
 
   // Unref 1 because refcounted is initialized with refcount = 1
-  refcounted->Unref();
+  refcounted->Unref(229);
 }
 
 void MapDefunOp::SetRunOptions(OpKernelContext* ctx,

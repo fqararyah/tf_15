@@ -136,7 +136,7 @@ class ConditionalAccumulatorBaseSyncOpKernel : public OpKernel {
     ConditionalAccumulatorBase* accumulator;
     OP_REQUIRES_OK(ctx, GetResourceFromContext(ctx, "handle", &accumulator));
     Compute(ctx, accumulator);
-    accumulator->Unref();
+    accumulator->Unref(254);
   }
 
  protected:
@@ -200,7 +200,7 @@ class ConditionalAccumulatorBaseAsyncOpKernel : public AsyncOpKernel {
     OP_REQUIRES_OK_ASYNC(
         ctx, GetResourceFromContext(ctx, "handle", &accumulator), callback);
     ComputeAsync(ctx, accumulator, [callback, accumulator]() {
-      accumulator->Unref();
+      accumulator->Unref(255);
       callback();
     });
   }

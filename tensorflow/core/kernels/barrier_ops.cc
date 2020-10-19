@@ -296,7 +296,7 @@ class Barrier : public ResourceBase {
   ~Barrier() override EXCLUSIVE_LOCKS_REQUIRED(mu_) {
     mutex_lock lock(mu_);
     incomplete_.clear();
-    ready_queue_->Unref();
+    ready_queue_->Unref(248);
   }
 
   string DebugString() const override { return "A barrier"; }
@@ -509,7 +509,7 @@ class BarrierOpKernel : public AsyncOpKernel {
     OP_REQUIRES_OK_ASYNC(ctx, GetResourceFromContext(ctx, "handle", &barrier),
                          callback);
     ComputeAsync(ctx, barrier, [callback, barrier]() {
-      barrier->Unref();
+      barrier->Unref(249);
       callback();
     });
   }

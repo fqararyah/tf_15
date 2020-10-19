@@ -132,7 +132,7 @@ class UntypedCall : public core::RefCounted {
           call_->RequestCancelled(service, ok);
           break;
       }
-      call_->Unref();  // Ref acquired when tag handed to grpc.
+      call_->Unref(101);  // Ref acquired when tag handed to grpc.
     }
 
    private:
@@ -379,7 +379,7 @@ class ServerUntypedBidirectionalStreamingCall : public core::RefCounted {
           // deleted.
           break;
       }
-      call_->Unref();  // Ref acquired when tag was handed to grpc.
+      call_->Unref(102);  // Ref acquired when tag was handed to grpc.
     }
 
    private:

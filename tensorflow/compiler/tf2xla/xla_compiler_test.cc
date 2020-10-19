@@ -107,7 +107,7 @@ class DummyReadResourceOp : public XlaOpKernel {
     OP_REQUIRES_OK(ctx, rm->Lookup<DummyResourceForTest>(
                             rm->default_container(), "dummy", &dummy));
     dummy->Increment();
-    dummy->Unref();
+    dummy->Unref(9);
 
     ctx->SetOutput(0, ctx->Input(0));
     ctx->SetOutput(1, ctx->Input(0));

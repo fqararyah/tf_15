@@ -133,7 +133,7 @@ class ChooseFastestDatasetOp : public DatasetOpKernel {
 
     ~Dataset() override {
       for (auto input : inputs_) {
-        input->Unref();
+        input->Unref(179);
       }
     }
 

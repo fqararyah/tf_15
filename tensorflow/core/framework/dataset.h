@@ -799,7 +799,7 @@ class DatasetBaseIterator : public IteratorBase {
     params_.dataset->Ref();
   }
 
-  ~DatasetBaseIterator() override { params_.dataset->Unref(); }
+  ~DatasetBaseIterator() override { params_.dataset->Unref(140); }
 
   const DataTypeVector& output_dtypes() const override {
     return params_.dataset->output_dtypes();

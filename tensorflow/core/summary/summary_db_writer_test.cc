@@ -55,10 +55,10 @@ class SummaryDbWriterTest : public ::testing::Test {
 
   void TearDown() override {
     if (writer_ != nullptr) {
-      writer_->Unref();
+      writer_->Unref(167);
       writer_ = nullptr;
     }
-    db_->Unref();
+    db_->Unref(168);
     db_ = nullptr;
   }
 

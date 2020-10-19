@@ -59,7 +59,7 @@ class TestCollectiveExecutorMgr : public CollectiveExecutorMgrInterface {
 
   ~TestCollectiveExecutorMgr() override {
     for (auto& iter : table_) {
-      iter.second->Unref();
+      iter.second->Unref(81);
     }
   }
 
@@ -81,7 +81,7 @@ class TestCollectiveExecutorMgr : public CollectiveExecutorMgrInterface {
     mutex_lock l(mu_);
     auto iter = table_.find(step_id);
     if (iter != table_.end()) {
-      iter->second->Unref();
+      iter->second->Unref(82);
       table_.erase(iter);
     }
   }

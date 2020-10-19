@@ -53,7 +53,7 @@ class CreateTreeVariableOp : public OpKernel {
     auto* result = new DecisionTreeResource(param_proto_);
     if (!ParseProtoUnlimited(result->mutable_decision_tree(),
                              tree_config_t->scalar<tstring>()())) {
-      result->Unref();
+      result->Unref(26);
       OP_REQUIRES(context, false,
                   errors::InvalidArgument("Unable to parse tree  config."));
     }

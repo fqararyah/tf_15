@@ -198,7 +198,7 @@ class XlaTensorBuffer : public TensorBuffer {
     auto* tensor_buffer = new XlaTensorBuffer(buffer.opaque(), expected_size,
                                               buffer.size(), allocator);
     Tensor t(dtype, shape, tensor_buffer);
-    tensor_buffer->Unref();
+    tensor_buffer->Unref(8);
     return t;
   }
 

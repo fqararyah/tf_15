@@ -366,7 +366,7 @@ class TensorArrayGradOp : public TensorArrayCreationOp {
 
     Status s = rm->LookupOrCreate<TensorArray>(
         ctx->step_container()->name(), key, output_tensor_array, creator);
-    (*output_tensor_array)->Unref();
+    (*output_tensor_array)->Unref(269);
 
     return s;
   }

@@ -52,7 +52,7 @@ class BoostedTreesCreateEnsembleOp : public OpKernel {
         new BoostedTreesEnsembleResource());
     if (!result->InitFromSerialized(
             tree_ensemble_serialized_t->scalar<tstring>()(), stamp_token)) {
-      result->Unref();
+      result->Unref(175);
       OP_REQUIRES(
           context, false,
           errors::InvalidArgument("Unable to parse tree ensemble proto."));

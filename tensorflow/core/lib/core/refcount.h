@@ -75,7 +75,7 @@ struct RefCountDeleter {
     fout<<"RefCountDeleter::"<<"\n";  
     fout.close();
     //**fareed
-     o->Unref(); }
+     o->Unref(161); }
 };
 
 // A unique_ptr that unrefs the owned object on destruction.
@@ -87,7 +87,7 @@ class ScopedUnref {
  public:
   explicit ScopedUnref(RefCounted* o) : obj_(o) {}
   ~ScopedUnref() {
-    if (obj_) obj_->Unref();
+    if (obj_) obj_->Unref(162);
     //**fareed
     std::ofstream fout;
     fout.open ("/home/nahmad/all_ds.txt", std::ios_base::app);
@@ -124,8 +124,8 @@ inline bool RefCounted::Unref(int caller_id) const {
     //**fareed
     std::ofstream fout;
     fout.open ("/home/nahmad/all_ds.txt", std::ios_base::app);
-    //std::string tmp_name(tensor_name);
-    fout<<"TensorReference::"<<caller_id<<"\n";  
+    std::string tmp_name(tensor_name);
+   fout<<"TensorReference::"<<tmp_name<<"::"<<caller_id<<"\n";
     fout.close();
     //**fareed
     delete this;

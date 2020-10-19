@@ -72,7 +72,7 @@ class ModelDatasetOp : public UnaryDatasetOpKernel {
       input_->Ref();
     }
 
-    ~Dataset() override { input_->Unref(); }
+    ~Dataset() override { input_->Unref(230); }
 
     std::unique_ptr<IteratorBase> MakeIteratorInternal(
         const string& prefix) const override {

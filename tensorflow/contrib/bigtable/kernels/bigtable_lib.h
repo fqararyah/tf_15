@@ -61,7 +61,7 @@ class BigtableTableResource : public ResourceBase {
     client_->Ref();
   }
 
-  ~BigtableTableResource() override { client_->Unref(); }
+  ~BigtableTableResource() override { client_->Unref(16); }
 
   ::google::cloud::bigtable::Table& table() { return table_; }
 

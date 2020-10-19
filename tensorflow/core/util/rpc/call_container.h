@@ -154,7 +154,7 @@ CallContainer<Call>::CallContainer(
   }
 
   // Subtract reference count from the initial creation.
-  reffed_status_callback_->Unref();
+  reffed_status_callback_->Unref(170);
 }
 
 template <class Call>
@@ -175,7 +175,7 @@ void CallContainer<Call>::Done(const Status& s, int index) {
   if (!try_rpc_) {
     reffed_status_callback_->UpdateStatus(s);
   }
-  reffed_status_callback_->Unref();
+  reffed_status_callback_->Unref(171);
 }
 
 }  // namespace tensorflow

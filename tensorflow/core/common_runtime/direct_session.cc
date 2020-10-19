@@ -1729,7 +1729,7 @@ DirectSession::RunState::~RunState() {
       rendez->StartAbort(errors::Cancelled("PRun cancellation"));
       executors_done.WaitForNotification();
     }
-    rendez->Unref();
+    rendez->Unref(52);
   }
 }
 

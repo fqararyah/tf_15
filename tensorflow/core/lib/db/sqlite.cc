@@ -147,7 +147,7 @@ Status Sqlite::Open(const string& path, int flags, Sqlite** db) {
   s.Update(EnvPragma(*db, "auto_vacuum", "TF_SQLITE_AUTO_VACUUM"));
   DCHECK((*db)->RefCountIsOne());
   if (!s.ok()) {
-    (*db)->Unref();
+    (*db)->Unref(164);
     *db = nullptr;
   }
   return s;

@@ -34,7 +34,7 @@ class ReaderVerbSyncOpKernel : public OpKernel {
     OP_REQUIRES_OK(context,
                    GetResourceFromContext(context, "reader_handle", &reader));
     ComputeWithReader(context, reader);
-    reader->Unref();
+    reader->Unref(266);
   }
 
  protected:
@@ -60,7 +60,7 @@ class ReaderVerbAsyncOpKernel : public AsyncOpKernel {
         done);
     thread_pool_->Schedule([this, context, reader, done]() {
       ComputeWithReader(context, reader);
-      reader->Unref();
+      reader->Unref(267);
       done();
     });
   }

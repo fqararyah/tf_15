@@ -150,7 +150,7 @@ class SqliteStatement {
   /// connection object from being freed.
   ~SqliteStatement() {
     sqlite3_finalize(stmt_);
-    if (db_ != nullptr) db_->Unref();
+    if (db_ != nullptr) db_->Unref(165);
   }
 
   /// \brief Returns true if statement is initialized.
@@ -330,7 +330,7 @@ class SqliteStatement {
   /// \brief Move assignment, after which <other> is reset to empty.
   SqliteStatement& operator=(SqliteStatement&& other) noexcept {
     if (&other != this) {
-      if (db_ != nullptr) db_->Unref();
+      if (db_ != nullptr) db_->Unref(166);
       if (stmt_ != nullptr) sqlite3_finalize(stmt_);
       db_ = other.db_;
       stmt_ = other.stmt_;

@@ -123,7 +123,7 @@ class SparseTensorAccessingOp : public OpKernel {
 
  protected:
   ~SparseTensorAccessingOp() override {
-    if (sparse_tensors_map_) sparse_tensors_map_->Unref();
+    if (sparse_tensors_map_) sparse_tensors_map_->Unref(268);
   }
 
   Status GetMap(OpKernelContext* ctx, bool is_writing,

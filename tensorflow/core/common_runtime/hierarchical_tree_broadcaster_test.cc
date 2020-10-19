@@ -198,7 +198,7 @@ class HierarchicalTreeBroadcasterTest : public ::testing::Test {
   ~HierarchicalTreeBroadcasterTest() override {
     stop_ = true;
     for (auto i : instances_) delete i;
-    if (col_exec_) col_exec_->Unref();
+    if (col_exec_) col_exec_->Unref(58);
   }
 
 #ifdef GOOGLE_CUDA
@@ -699,7 +699,7 @@ class HierarchicalTreeBroadcasterTest : public ::testing::Test {
         CHECK(tensor_.CopyFrom(*ctx.mutable_output(0), tensor_.shape()));
       }
 
-      dev_ctx->Unref();
+      dev_ctx->Unref(59);
     }
 
     HierarchicalTreeBroadcasterTest* parent_;

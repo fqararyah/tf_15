@@ -322,7 +322,7 @@ void QueueBase::FlushUnlocked() {
       changed = TryAttemptLocked(kDequeue, &clean_up) || changed;
     } while (changed);
   }
-  Unref();
+  Unref(264);
   for (const auto& to_clean : clean_up) {
     if (to_clean.to_deregister != CancellationManager::kInvalidToken) {
       // NOTE(mrry): We can safely ignore the return value of

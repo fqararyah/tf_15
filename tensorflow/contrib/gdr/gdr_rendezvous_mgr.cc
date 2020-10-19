@@ -190,7 +190,7 @@ class GdrRemoteRendezvous : public BaseRemoteRendezvous {
       session()->worker_cache->ReleaseWorker(src_worker, rwi);
       done(s, Args(), call->recv_args(), call->tensor(), call->is_dead());
       delete call;
-      Unref();
+      Unref(25);
     });
   }
 

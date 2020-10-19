@@ -83,9 +83,9 @@ class DirectedInterleaveDatasetOp : public DatasetOpKernel {
     }
 
     ~Dataset() override {
-      selector_input_->Unref();
+      selector_input_->Unref(181);
       for (DatasetBase* data_input : data_inputs_) {
-        data_input->Unref();
+        data_input->Unref(182);
       }
     }
 

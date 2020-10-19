@@ -302,7 +302,7 @@ Status GetInitializableLookupTable(const string& input_name,
     TF_RETURN_IF_ERROR(LookupResource(ctx, handle, &lookup_table));
     *table = lookup_table->GetInitializableLookupTable();
     if (*table == nullptr) {
-      lookup_table->Unref();
+      lookup_table->Unref(260);
       return errors::InvalidArgument("Table ", handle.container(), " ",
                                      handle.name(), " is not initializable");
     }
@@ -315,7 +315,7 @@ Status GetInitializableLookupTable(const string& input_name,
                                                        &lookup_table));
     *table = lookup_table->GetInitializableLookupTable();
     if (*table == nullptr) {
-      lookup_table->Unref();
+      lookup_table->Unref(261);
       return errors::InvalidArgument("Table ", container, " ", table_handle,
                                      " is not initializable");
     }

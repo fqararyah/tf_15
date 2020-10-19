@@ -416,7 +416,7 @@ class MultiDeviceIteratorHandleOp : public OpKernel {
   // to kernel.
   ~MultiDeviceIteratorHandleOp() override {
     if (resource_ != nullptr) {
-      resource_->Unref();
+      resource_->Unref(231);
       if (cinfo_.resource_is_private_to_kernel()) {
         if (!cinfo_.resource_manager()
                  ->template Delete<MultiDeviceIterator>(cinfo_.container(),
@@ -476,7 +476,7 @@ class MultiDeviceIteratorHandleOp : public OpKernel {
                                  }));
           Status s = VerifyResource(resource);
           if (TF_PREDICT_FALSE(!s.ok())) {
-            resource->Unref();
+            resource->Unref(232);
             context->SetStatus(s);
             return;
           }

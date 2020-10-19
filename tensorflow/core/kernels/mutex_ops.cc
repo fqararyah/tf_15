@@ -212,7 +212,7 @@ class MutexLockOp : public AsyncOpKernel {
                  } else {
                    c->SetStatus(s);
                  }
-                 mutex->Unref();
+                 mutex->Unref(262);
                  done_();
                },
                std::move(done), std::placeholders::_1, std::placeholders::_2));

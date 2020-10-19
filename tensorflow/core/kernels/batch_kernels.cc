@@ -748,7 +748,7 @@ class BatchFunctionKernel : public AsyncOpKernel {
                          done);
     const Status status =
         br->RegisterInput(random::New64(), c, batcher_queue_, done);
-    br->Unref();
+    br->Unref(250);
     OP_REQUIRES_OK_ASYNC(c, status, done);
     // Assume br calls done, so nothing to do here.
   }
@@ -828,7 +828,7 @@ class BatchKernel : public AsyncOpKernel {
                          done);
     const Status status =
         br->RegisterInput(random::New64(), c, batcher_queue_, done);
-    br->Unref();
+    br->Unref(251);
     OP_REQUIRES_OK_ASYNC(c, status, done);
     // Assume br calls done, so nothing to do here.
   }
@@ -1087,7 +1087,7 @@ class UnbatchKernel : public AsyncOpKernel {
                              container_, shared_name_, &ubr, creator),
                          done);
     auto status = ubr->Compute(c, done);
-    ubr->Unref();
+    ubr->Unref(252);
     OP_REQUIRES_OK_ASYNC(c, status, done);
     // Assume ubr calls done, so nothing to do here.
   }
@@ -1273,7 +1273,7 @@ class UnbatchGradKernel : public AsyncOpKernel {
                              container_, shared_name_, &ubr, creator),
                          done);
     Status status = ubr->Compute(c, done);
-    ubr->Unref();
+    ubr->Unref(253);
     OP_REQUIRES_OK_ASYNC(c, status, done);
     // Assume ubr calls done, so nothing to do here.
   }

@@ -59,7 +59,7 @@ void CopyHostToDevice(const Tensor* input, Allocator* cpu_allocator,
 
     auto wrapped_done = [status_cb](const Status& s) {
       status_cb->UpdateStatus(s);
-      status_cb->Unref();
+      status_cb->Unref(49);
     };
     auto copier = std::bind(
         [dst, recv_dev_context, out_allocator, status_cb, cpu_allocator,
@@ -133,7 +133,7 @@ void CopyDeviceToDevice(CopyTensor::CopyFunction copy_function,
 
     auto wrapped_done = [status_cb](const Status& s) {
       status_cb->UpdateStatus(s);
-      status_cb->Unref();
+      status_cb->Unref(50);
     };
     auto copier = std::bind(
         [copy_function, cpu_allocator, src, dst, src_alloc_attr, dst_alloc_attr,
@@ -352,7 +352,7 @@ void CopyDeviceToHost(const Tensor* input, Allocator* cpu_allocator,
 
     auto wrapped_done = [status_cb](const Status& s) {
       status_cb->UpdateStatus(s);
-      status_cb->Unref();
+      status_cb->Unref(51);
     };
     auto copier = std::bind(
         [edge_name, src, send_dev_context, out_allocator, status_cb,

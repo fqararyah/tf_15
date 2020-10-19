@@ -118,7 +118,7 @@ class RemoteCopyNode : public EagerNode {
   class CapturedSharedState {
    public:
     explicit CapturedSharedState(TensorHandle* d) : dst_(d) { dst_->Ref(); }
-    ~CapturedSharedState() { dst_->Unref(); }
+    ~CapturedSharedState() { dst_->Unref(95); }
 
     void SetSendStatus(Status status) {
       send_status_.Update(status);

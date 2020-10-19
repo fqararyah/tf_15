@@ -62,7 +62,7 @@ class LookupTableOp : public OpKernel {
             EXCLUSIVE_LOCKS_REQUIRED(mu_) {
               lookup::LookupInterface* container = new Container(ctx, this);
               if (!ctx->status().ok()) {
-                container->Unref();
+                container->Unref(259);
                 return ctx->status();
               }
               if (ctx->track_allocations()) {

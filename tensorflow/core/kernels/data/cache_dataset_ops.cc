@@ -75,7 +75,7 @@ class CacheDatasetOp::FileDataset : public DatasetBase {
     DCHECK_EQ(item_index_padding_size_, 7);
   }
 
-  ~FileDataset() override { input_->Unref(); }
+  ~FileDataset() override { input_->Unref(210); }
 
   std::unique_ptr<IteratorBase> MakeIteratorInternal(
       const string& prefix) const override {
@@ -639,9 +639,9 @@ class CacheDatasetOp::MemoryDataset : public DatasetBase {
   }
 
   ~MemoryDataset() override {
-    input_->Unref();
+    input_->Unref(213);
     if (cache_) {
-      cache_->Unref();
+      cache_->Unref(211);
     }
   }
 
@@ -695,7 +695,7 @@ class CacheDatasetOp::MemoryDataset : public DatasetBase {
 
     ~MemoryIterator() override {
       if (dataset()->cache_ == nullptr) {
-        cache_->Unref();
+        cache_->Unref(212);
       }
     }
 

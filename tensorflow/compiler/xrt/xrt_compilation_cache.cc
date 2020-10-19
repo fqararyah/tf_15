@@ -61,7 +61,7 @@ XRTCompilationCache::~XRTCompilationCache() {
   // outstanding client references to avoid leaking storage.
   for (const auto& entry : entries_by_uid_) {
     while (!entry.second->RefCountIsOne()) {
-      entry.second->Unref();
+      entry.second->Unref(11);
     }
   }
   while (!entries_by_last_use_.empty()) {
@@ -119,7 +119,7 @@ void XRTCompilationCache::DiscardEntryRefLocked(CompiledSubgraph* entry) {
     erased = entries_by_uid_.erase(entry->uid);
     CHECK_EQ(erased, 1);
   }
-  entry->Unref();
+  entry->Unref(12);
 }
 
 void XRTCompilationCache::MarkOldestEntryForEviction() {

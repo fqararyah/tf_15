@@ -34,7 +34,7 @@ namespace tensorflow {
 IntraProcessRendezvous::IntraProcessRendezvous(const DeviceMgr* device_mgr)
     : device_mgr_(device_mgr), local_(NewLocalRendezvous()) {}
 
-IntraProcessRendezvous::~IntraProcessRendezvous() { local_->Unref(); }
+IntraProcessRendezvous::~IntraProcessRendezvous() { local_->Unref(69); }
 
 Status IntraProcessRendezvous::Send(const ParsedKey& parsed,
                                     const Rendezvous::Args& args,

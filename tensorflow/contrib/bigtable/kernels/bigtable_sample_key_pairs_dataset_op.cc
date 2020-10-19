@@ -65,7 +65,7 @@ class BigtableSampleKeyPairsDatasetOp : public DatasetOpKernel {
       table_->Ref();
     }
 
-    ~Dataset() override { table_->Unref(); }
+    ~Dataset() override { table_->Unref(21); }
 
     std::unique_ptr<IteratorBase> MakeIteratorInternal(
         const string& prefix) const override {

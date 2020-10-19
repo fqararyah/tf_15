@@ -51,8 +51,8 @@ class ConcatenateDatasetOp::Dataset : public DatasetBase {
     }
   }
   ~Dataset() override {
-    input_->Unref();
-    to_concatenate_->Unref();
+    input_->Unref(214);
+    to_concatenate_->Unref(215);
   }
 
   std::unique_ptr<IteratorBase> MakeIteratorInternal(
