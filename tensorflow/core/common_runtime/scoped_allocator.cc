@@ -15,6 +15,8 @@ limitations under the License.
 #include "tensorflow/core/common_runtime/scoped_allocator.h"
 #include "tensorflow/core/common_runtime/scoped_allocator_mgr.h"
 
+#include <fstream>
+
 namespace tensorflow {
 
 ScopedAllocator::ScopedAllocator(const Tensor& backing_tensor, int32 scope_id,
@@ -50,6 +52,13 @@ ScopedAllocator::~ScopedAllocator() {
       VLOG(1) << "expected_call_count_ = " << expected_call_count_
               << " at deallocation";
   }
+  //*fareed
+  std::ofstream fout;
+  fout.open ("/home/nahmad/all_ds.txt", std::ios_base::app);
+  //std::string tmp_name(tensor_name);
+  fout<<"scoped_aloc"<<"\n";  
+  fout.close();
+  //*fareed
   if (tbuf_) tbuf_->Unref();
 }
 
@@ -89,6 +98,13 @@ void* ScopedAllocator::AllocateRaw(int32 field_index, size_t num_bytes) {
       container_->Drop(f.scope_id, this);
     }
     container_->Drop(id_, this);
+    //*fareed
+  std::ofstream fout;
+  fout.open ("/home/nahmad/all_ds.txt", std::ios_base::app);
+  //std::string tmp_name(tensor_name);
+  fout<<"scoped_alloc::"<<"\n";  
+  fout.close();
+  //*fareed
     container_->Unref();
     container_ = nullptr;
   }

@@ -21,6 +21,8 @@ limitations under the License.
 #include <string>
 #include <unordered_map>
 #include <vector>
+#include <fstream>
+#include <iostream>
 
 #include "absl/memory/memory.h"
 #include "absl/strings/string_view.h"
@@ -71,6 +73,7 @@ limitations under the License.
 #include "tensorflow/core/profiler/internal/traceme_recorder.h"
 #include "tensorflow/core/profiler/lib/traceme.h"
 #include "tensorflow/core/util/tensor_slice_reader_cache.h"
+using namespace std;
 
 namespace tensorflow {
 namespace {
@@ -1217,6 +1220,9 @@ class ExecutorState {
       DCHECK_LT(front_index_, ready_.size());
       return ready_[front_index_];
     }
+	int size(){
+    	return ready_.size();
+    }
     void pop_front() {
       DCHECK_LT(front_index_, ready_.size());
       front_index_++;
@@ -1616,7 +1622,21 @@ bool MightTrace(const NodeItem& item,
       profiler::GetTFTraceMeLevel(item.kernel->IsExpensive()));
 }
 
+static int read = 0;
+std::map<std::string, int> priorities_map;
 void ExecutorState::Process(TaggedNode tagged_node, int64 scheduled_nsec) {
+  if(read == 0){
+	std::string a;
+	int b;
+	std::ifstream infile2("/home/nahmad/priorities.txt"); 
+	while (infile2 >> a >> b)
+	{
+		priorities_map[a] = b;
+	}
+	infile2.close();
+	read = 1;
+  }
+  
   WithContext wc(context_);
   const GraphView& gview = impl_->gview_;
   TaggedNodeSeq ready;
@@ -1685,6 +1705,35 @@ void ExecutorState::Process(TaggedNode tagged_node, int64 scheduled_nsec) {
     tagged_node = inline_ready.front();
     inline_ready.pop_front();
     const Node* node = tagged_node.node;
+	/*
+  //*fareed
+	const Node* current_node;
+	int top_prio = 0;
+	int limit = inline_ready.size();
+	for(size_t iii = 0; iii < limit; iii++){
+		TaggedNode tmp_tagged_node = inline_ready.front();
+		inline_ready.pop_front();
+		current_node = tmp_tagged_node.node;
+		string current_node_name = current_node->name();
+		std::transform(current_node_name.begin(), current_node_name.end(), current_node_name.begin(),
+			[](unsigned char c){ return std::tolower(c); });
+		//if(priorities_map.find(current_node_name) != priorities_map.end())
+		//	cout<<current_node_name<<" "<< priorities_map[current_node_name]<<"\n";
+		//else
+		//	cout<<current_node_name<<" none\n";
+		if( priorities_map.find(current_node_name) != priorities_map.end() and priorities_map[current_node_name] > top_prio){
+			top_prio = priorities_map[current_node_name];
+			inline_ready.push_back(tagged_node);
+			tagged_node = tmp_tagged_node;
+		}
+		else{
+			inline_ready.push_back(tmp_tagged_node);			
+		}
+	} 
+	node = tagged_node.node;
+	//cout<< "----------------\n" <<node->name()<<"\n++++++++++++++++\n";
+	//*end fareed
+  */
     FrameState* input_frame = tagged_node.input_frame;
     const int64 input_iter = tagged_node.input_iter;
     const int id = node->id();

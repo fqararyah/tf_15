@@ -52,6 +52,9 @@ limitations under the License.
 #include "tensorflow/core/platform/types.h"
 #include "tensorflow/core/util/ptr_util.h"
 
+#include <fstream>
+using namespace std;
+
 namespace tensorflow {
 
 std::map<std::string, std::string> OpKernelContext::mp = {};
@@ -304,6 +307,18 @@ OpKernelContext::OpKernelContext(Params* params, int num_outputs)
 OpKernelContext::~OpKernelContext() {
   for (TensorValue& value : outputs_) {
     if (!value.is_ref()) {
+      //*fareed
+     string tmp_name = params_->op_kernel->name();
+      int name_len = min(150, (int)tmp_name.size());
+
+      if(value.tensor){
+        if(value.tensor->buf_){
+          for(int i =0; i< name_len; i++){
+            value.tensor->buf_->tensor_name[i] = tmp_name[i];
+          }
+        }
+      }
+      //*end fareed
       delete value.tensor;
     }
   }

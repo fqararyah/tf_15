@@ -18,14 +18,19 @@ limitations under the License.
 
 #include <atomic>
 #include <memory>
+#include<fstream>
 
 #include "tensorflow/core/platform/logging.h"
+
 
 namespace tensorflow {
 namespace core {
 
 class RefCounted {
  public:
+ //*fareed
+ char tensor_name[150]={'\0'};
+ //*end fareed
   // Initial reference count is one.
   RefCounted();
 
@@ -62,7 +67,15 @@ class RefCounted {
 
 // A deleter class to form a std::unique_ptr that unrefs objects.
 struct RefCountDeleter {
-  void operator()(tensorflow::core::RefCounted* o) const { o->Unref(); }
+  void operator()(tensorflow::core::RefCounted* o) const {
+    //**fareed
+    std::ofstream fout;
+    fout.open ("/home/nahmad/all_ds.txt", std::ios_base::app);
+    //std::string tmp_name(tensor_name);
+    fout<<"RefCountDeleter::"<<"\n";  
+    fout.close();
+    //**fareed
+     o->Unref(); }
 };
 
 // A unique_ptr that unrefs the owned object on destruction.
@@ -75,6 +88,13 @@ class ScopedUnref {
   explicit ScopedUnref(RefCounted* o) : obj_(o) {}
   ~ScopedUnref() {
     if (obj_) obj_->Unref();
+    //**fareed
+    std::ofstream fout;
+    fout.open ("/home/nahmad/all_ds.txt", std::ios_base::app);
+    //std::string tmp_name(tensor_name);
+    fout<<"scoped_unref::"<<"\n";  
+    fout.close();
+    //**fareed
   }
 
  private:
@@ -94,13 +114,20 @@ inline void RefCounted::Ref() const {
   ref_.fetch_add(1, std::memory_order_relaxed);
 }
 
-inline bool RefCounted::Unref() const {
+inline bool RefCounted::Unref(int caller_id) const {
   DCHECK_GT(ref_.load(), 0);
   // If ref_==1, this object is owned only by the caller. Bypass a locked op
   // in that case.
   if (RefCountIsOne() || ref_.fetch_sub(1) == 1) {
     // Make DCHECK in ~RefCounted happy
     DCHECK((ref_.store(0), true));
+    //**fareed
+    std::ofstream fout;
+    fout.open ("/home/nahmad/all_ds.txt", std::ios_base::app);
+    //std::string tmp_name(tensor_name);
+    fout<<"TensorReference::"<<caller_id<<"\n";  
+    fout.close();
+    //**fareed
     delete this;
     return true;
   } else {

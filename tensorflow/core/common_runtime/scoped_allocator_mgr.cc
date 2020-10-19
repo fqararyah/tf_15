@@ -122,6 +122,13 @@ ScopedAllocatorMgr::~ScopedAllocatorMgr() {
     // such as when an error has interrupted execution or in a unittest,
     // we need to remove all of its Refs here to avoid memory leaks.
     // This is safe so long as graph execution has ceased.
+    //*fareed
+    std::ofstream fout;
+    fout.open ("/home/nahmad/all_ds.txt", std::ios_base::app);
+    //std::string tmp_name(tensor_name);
+    fout<<"scoped_mgr::"<<"\n";  
+    fout.close();
+    //*fareed
     while (!it.second->Unref()) {
     }
   }
@@ -131,6 +138,13 @@ void ScopedAllocatorMgr::Cleanup(int64 step_id) {
   mutex_lock l(mu_);
   auto it = per_step_map_.find(step_id);
   if (it != per_step_map_.end()) {
+    //*fareed
+    std::ofstream fout;
+    fout.open ("/home/nahmad/all_ds.txt", std::ios_base::app);
+    //std::string tmp_name(tensor_name);
+    fout<<"scoped_mgr::"<<"\n";  
+    fout.close();
+    //*fareed
     it->second->Unref();
     per_step_map_.erase(it);
   }

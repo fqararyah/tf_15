@@ -95,6 +95,9 @@ class TensorBuffer : public core::RefCounted {
 /// Represents an n-dimensional array of values.
 class Tensor {
  public:
+  //*fareed
+  TensorBuffer* buf_;
+  //*end fareed
   /// \brief Creates a 1-dimensional, 0-element float tensor.
   ///
   /// The returned Tensor is not a scalar (shape {}), but is instead
@@ -647,7 +650,6 @@ class Tensor {
       gtl::ArraySlice<int64> orig, int64 num_out_dims);
 
   TensorShape shape_;
-  TensorBuffer* buf_;
 
   friend class DMAHelper;             // For access to buf_.
   friend class TensorCApi;            // For access to buf_.

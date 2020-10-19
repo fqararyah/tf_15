@@ -17,11 +17,14 @@ limitations under the License.
 #define TENSORFLOW_CORE_FRAMEWORK_TYPED_ALLOCATOR_H_
 
 #include <limits>
+#include <fstream>
 
 #include "tensorflow/core/framework/allocator.h"
 #include "tensorflow/core/framework/resource_handle.h"
 #include "tensorflow/core/framework/type_traits.h"
 #include "tensorflow/core/platform/types.h"
+
+using namespace std;
 
 namespace tensorflow {
 
@@ -42,6 +45,12 @@ class TypedAllocator {
     if (num_elements > (std::numeric_limits<size_t>::max() / sizeof(T))) {
       return nullptr;
     }
+    //*fareed
+    ofstream fout;
+    fout.open ("/home/nahmad/all_ds.txt", std::ios_base::app);
+    fout<<raw_allocator->get_op_name()<<"::allocated"<<raw_allocator->Name()<<"\n";  
+    fout.close();
+    //*end fareed
 
     void* p =
         raw_allocator->AllocateRaw(Allocator::kAllocatorAlignment,
@@ -56,6 +65,12 @@ class TypedAllocator {
                          size_t num_elements) {
     if (ptr) {
       RunDtor<T>(raw_allocator, ptr, num_elements);
+      //*fareed
+      ofstream fout;
+			fout.open ("/home/nahmad/all_ds.txt", std::ios_base::app);
+			fout<<raw_allocator->get_op_name()<<"::deallocated"<<raw_allocator->Name()<<"\n";  
+			fout.close();
+      //*end fareed
       raw_allocator->DeallocateRaw(ptr);
     }
   }

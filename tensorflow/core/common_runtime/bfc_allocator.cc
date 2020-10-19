@@ -681,6 +681,11 @@ void BFCAllocator::MarkFree(BFCAllocator::ChunkHandle h) {
 		fout<<"deallocated::"<<op_name_<<"::"<< c->size <<"\n"; 
 		fout.close();
 	}
+
+  /* std::ofstream fout;
+  fout.open ("/home/nahmad/all_ds.txt", std::ios_base::app);
+	fout<<op_name_<<"::bfc_deallocated\n";  
+	fout.close(); */
 	//*end fareed
 
   // Updates the stats.

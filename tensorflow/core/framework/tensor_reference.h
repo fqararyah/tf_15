@@ -19,6 +19,8 @@ limitations under the License.
 #include "tensorflow/core/framework/tensor.h"
 #include "tensorflow/core/lib/gtl/inlined_vector.h"
 
+#include <fstream>
+
 namespace tensorflow {
 
 // An opaque class that holds a reference to an underlying TensorBuffer.
@@ -35,7 +37,8 @@ class TensorReference {
   ~TensorReference() {}
 
   void Unref() const {
-    if (buf_) buf_->Unref();
+    if (buf_) {buf_->Unref();
+    }
   }
 
   // Return an estimate of the total bytes being kept alive by this reference.

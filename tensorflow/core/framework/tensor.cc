@@ -55,6 +55,9 @@ limitations under the License.
 #include "tensorflow/core/platform/tensor_coding.h"
 #include "tensorflow/core/platform/types.h"
 
+#include <fstream>
+using namespace std;
+
 namespace tensorflow {
 
 // Allow Tensors to be stored inside Variants with automatic
@@ -606,7 +609,16 @@ void RefIfNonNull(core::RefCounted* buf) {
 }
 
 void UnrefIfNonNull(core::RefCounted* buf) {
-  if (buf) buf->Unref();
+  if (buf){
+    //*fareed
+  std::ofstream fout;
+  fout.open ("/home/nahmad/all_ds.txt", std::ios_base::app);
+  //std::string tmp_name(tensor_name);
+  fout<<"ifnotnull::"<<"\n";  
+  fout.close();
+  //*fareed
+    buf->Unref();
+  }
 }
 
 }  // end namespace
@@ -644,7 +656,9 @@ void Tensor::CheckIsAlignedAndSingleElement() const {
   CHECK_EQ(1, NumElements()) << "Must have a one element tensor";
 }
 
-Tensor::~Tensor() { UnrefIfNonNull(buf_); }
+Tensor::~Tensor() {
+  UnrefIfNonNull(buf_); 
+}
 
 void Tensor::CopyFromInternal(const Tensor& other, const TensorShape& shape) {
   CHECK_EQ(shape.num_elements(), other.NumElements());
@@ -820,7 +834,16 @@ class SubBuffer : public TensorBuffer {
   T* data_;
   int64 elem_;
 
-  ~SubBuffer() override { root_->Unref(); }
+  ~SubBuffer() override {
+    //*fareed
+    std::ofstream fout;
+    fout.open ("/home/nahmad/all_ds.txt", std::ios_base::app);
+    //std::string tmp_name(tensor_name);
+    fout<<"sub::"<<"\n";  
+    fout.close();
+    //*fareed
+    root_->Unref();  
+  }
 
   TF_DISALLOW_COPY_AND_ASSIGN(SubBuffer);
 };
