@@ -101,7 +101,7 @@ void TrackingAllocator::DeallocateRaw(void* ptr) {
       allocated_ -= allocated_bytes;
       allocations_.emplace_back(-allocated_bytes, Env::Default()->NowMicros());
     }
-    should_delete = UnRef();
+    should_delete = UnRef(-1);
   }
   allocator->DeallocateRaw(ptr);
   if (should_delete) {
@@ -177,7 +177,7 @@ gtl::InlinedVector<AllocRecord, 4> TrackingAllocator::GetRecordsAndUnRef() {
   {
     mutex_lock lock(mu_);
     allocations.swap(allocations_);
-    should_delete = UnRef();
+    should_delete = UnRef(-1);
   }
   if (should_delete) {
     delete this;
@@ -196,7 +196,7 @@ gtl::InlinedVector<AllocRecord, 4> TrackingAllocator::GetCurrentRecords() {
   return allocations;
 }
 
-bool TrackingAllocator::UnRef() {
+bool TrackingAllocator::UnRef(int caller_id) {
   CHECK_GE(ref_, 1);
   --ref_;
   return (ref_ == 0);

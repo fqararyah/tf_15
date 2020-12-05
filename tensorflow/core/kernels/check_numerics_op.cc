@@ -193,7 +193,7 @@ class CheckNumericsOp<GPUDevice, T> : public AsyncOpKernel {
       auto abnormal_detected_host_flat = abnormal_detected_host.flat<int>();
       int is_nan = abnormal_detected_host_flat(0);
       int is_inf = abnormal_detected_host_flat(1);
-      abnormal_detected_ref.Unref();
+      abnormal_detected_ref.Unref(-1);
       if (is_nan || is_inf) {
         string status;
         LOG(ERROR) << "abnormal_detected_host @"

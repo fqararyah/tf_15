@@ -248,7 +248,7 @@ TEST(SqliteOpenTest, CloseConnectionBeforeStatement_KeepsConnectionOpen) {
   Sqlite* db;
   TF_ASSERT_OK(Sqlite::Open(":memory:", SQLITE_OPEN_READWRITE, &db));
   SqliteStatement stmt = db->PrepareOrDie("SELECT ? + ?");
-  db->Unref();
+  db->Unref(-1);
   stmt.BindInt(1, 7);
   stmt.BindInt(2, 3);
   EXPECT_EQ(10, stmt.StepOnceOrDie().ColumnInt(0));

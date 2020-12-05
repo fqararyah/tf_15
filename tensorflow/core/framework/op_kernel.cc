@@ -480,14 +480,14 @@ bool OpKernelContext::forward_input_to_output_with_shape(
     *output = outputs_[output_index].tensor;
 	
 	//*fareed
-	if(mp.find(params_->op_kernel->name()) != mp.end()){}
+	/* if(mp.find(params_->op_kernel->name()) != mp.end()){}
 	else{
 		mp[params_->op_kernel->name()] = "1";
 		std::ofstream fout;
 		fout.open ("/home/nahmad/op_mem_for.txt", std::ios_base::app);
 		fout<<params_->op_kernel->requested_input(input_index)<<"::"<<params_->op_kernel->name()<<"\n"; 
 		fout.close();
-	}
+	} */
 	//*end fareed
 	
     return true;
@@ -766,8 +766,10 @@ Status OpKernelContext::allocate_tensor(
   *out_tensor = std::move(new_tensor);
   
   //*fareed
-  //new_tensor.set_op_name(params_->op_kernel->name());
-  //*end fareed
+  if(out_tensor != NULL){
+    out_tensor->f_tensor_name = this->op_kernel().name();
+  }
+  //*end_fareed
   return Status::OK();
 }
 
@@ -878,7 +880,7 @@ Status OpKernelContext::allocate_persistent(DataType type,
         AllocationDescription alloc_desc;
         TensorReference tensor_ref(*t);
         tensor_ref.FillDescription(&alloc_desc);
-        tensor_ref.Unref();
+        tensor_ref.Unref(-1);
 
         if (alloc_desc.allocated_bytes()) {  // Non-zero sized tensor.
           int64 alloc_size = a->AllocatedSize(t->tensor_data().data());

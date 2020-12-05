@@ -131,7 +131,7 @@ class EventMgr {
     for (const auto& iu : to_free) {
       if (iu.mem != nullptr) {
         for (auto& t : *(iu.mem)) {
-          t.Unref();
+          t.Unref(-1);
         }
         delete iu.mem;
       }

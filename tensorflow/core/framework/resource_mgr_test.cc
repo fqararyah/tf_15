@@ -56,7 +56,7 @@ string Find(const ResourceMgr& rm, const string& container,
   T* r;
   TF_CHECK_OK(rm.Lookup(container, name, &r));
   const string ret = r->DebugString();
-  r->Unref();
+  r->Unref(-1);
   return ret;
 }
 
@@ -69,7 +69,7 @@ string LookupOrCreate(ResourceMgr* rm, const string& container,
     return Status::OK();
   }));
   const string ret = r->DebugString();
-  r->Unref();
+  r->Unref(-1);
   return ret;
 }
 
@@ -154,7 +154,7 @@ TEST(ResourceMgrTest, CreateOrLookupRaceCondition) {
               *ret = new Resource("label");
               return Status::OK();
             }));
-        r->Unref();
+        r->Unref(-1);
       });
     }
   }
@@ -299,7 +299,7 @@ TEST(ResourceHandleTest, DifferentDevice) {
 
   auto* r = new StubResource();
   ASSERT_FALSE(CreateResource(&other_ctx, p, r).ok());
-  r->Unref();
+  r->Unref(-1);
 }
 
 // Other stub resource to test type-checking of resource handles.
@@ -321,7 +321,7 @@ TEST(ResourceHandleTest, DifferentType) {
 
   auto* r = new OtherStubResource;
   ASSERT_FALSE(CreateResource(&ctx, p, r).ok());
-  r->Unref();
+  r->Unref(-1);
 }
 
 TEST(ResourceHandleTest, DeleteUsingResourceHandle) {

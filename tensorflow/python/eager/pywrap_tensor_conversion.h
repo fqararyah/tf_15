@@ -87,7 +87,7 @@ struct TFE_TensorHandleCache {
   void DecrefUnrefAll() {
     for (const auto& p : cache) {
       Py_DECREF(static_cast<PyObject*>(std::get<0>(p.first)));
-      p.second->Unref();
+      p.second->Unref(-1);
     }
   }
 

@@ -34,7 +34,7 @@ void EagerOperation::AddInput(tensorflow::TensorHandle* h) {
 
 void EagerOperation::UpdateInput(int i, tensorflow::TensorHandle* h) {
   h->Ref();
-  inputs_[i]->Unref();
+  inputs_[i]->Unref(-1);
   inputs_[i] = h;
 }
 

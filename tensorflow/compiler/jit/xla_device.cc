@@ -225,7 +225,7 @@ XlaDevice::~XlaDevice() {
   VLOG(1) << "Destroying XLA device " << jit_device_name_ << " " << this;
   mutex_lock lock(mu_);
   if (device_context_) {
-    device_context_->Unref();
+    device_context_->Unref(-1);
   }
 }
 
@@ -322,7 +322,7 @@ xla::StatusOr<XlaDeviceContext*> XlaDevice::GetDeviceContextLocked() {
   // Call GetAllocator for the side-effect of ensuring the allocator is created.
   GetAllocatorLocked({});
   if (device_context_) {
-    device_context_->Unref();
+    device_context_->Unref(-1);
   }
   // The XlaDeviceContext keeps a reference count to the streams, and the
   // XlaDeviceContext remains live for the duration of a Executor run. This

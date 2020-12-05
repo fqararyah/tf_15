@@ -138,7 +138,7 @@ void AssignRefCounted(StringPiece src, core::RefCounted* obj, Cord* out) {
   // Defines a lambda to unref "obj" when Cord deletes this piece of
   // memory. +[] converts the lambda to a C style function pointer.
   auto cleanup = +[](absl::string_view donotcare, void* obj) {
-    reinterpret_cast<core::RefCounted*>(obj)->Unref();
+    reinterpret_cast<core::RefCounted*>(obj)->Unref(-1);
   };
   out->AppendExternalMemory(absl::string_view(src.data(), src.size()), obj,
                             cleanup);

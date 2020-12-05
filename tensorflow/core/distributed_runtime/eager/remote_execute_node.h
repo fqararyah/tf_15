@@ -59,11 +59,11 @@ class RemoteExecuteNode : public EagerNode {
   void Abort(Status status) override {
     for (auto handle : retvals_) {
       handle->Poison(status);
-      handle->Unref();
+      handle->Unref(-1);
     }
 
     for (auto handle : inputs_) {
-      handle->Unref();
+      handle->Unref(-1);
     }
   }
 

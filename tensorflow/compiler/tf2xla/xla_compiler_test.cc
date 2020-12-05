@@ -708,7 +708,7 @@ TEST_F(XlaCompilerTest, ResourceManager) {
 
   EXPECT_EQ(1, resource->Get());
 
-  resource->Unref();
+  resource->Unref(-1);
 }
 
 // Tests compilation and execution of a graph that adds two tensors.

@@ -42,7 +42,7 @@ TEST_F(RefTest, New) {
   MyRef* ref = new MyRef;
   ASSERT_EQ(1, constructed);
   ASSERT_EQ(0, destroyed);
-  ref->Unref();
+  ref->Unref(-1);
   ASSERT_EQ(1, constructed);
   ASSERT_EQ(1, destroyed);
 }
@@ -53,24 +53,24 @@ TEST_F(RefTest, RefUnref) {
   ASSERT_EQ(0, destroyed);
   ref->Ref();
   ASSERT_EQ(0, destroyed);
-  ref->Unref();
+  ref->Unref(-1);
   ASSERT_EQ(0, destroyed);
-  ref->Unref();
+  ref->Unref(-1);
   ASSERT_EQ(1, destroyed);
 }
 
 TEST_F(RefTest, RefCountOne) {
   MyRef* ref = new MyRef;
   ASSERT_TRUE(ref->RefCountIsOne());
-  ref->Unref();
+  ref->Unref(-1);
 }
 
 TEST_F(RefTest, RefCountNotOne) {
   MyRef* ref = new MyRef;
   ref->Ref();
   ASSERT_FALSE(ref->RefCountIsOne());
-  ref->Unref();
-  ref->Unref();
+  ref->Unref(-1);
+  ref->Unref(-1);
 }
 
 TEST_F(RefTest, ConstRefUnref) {
@@ -79,17 +79,17 @@ TEST_F(RefTest, ConstRefUnref) {
   ASSERT_EQ(0, destroyed);
   cref->Ref();
   ASSERT_EQ(0, destroyed);
-  cref->Unref();
+  cref->Unref(-1);
   ASSERT_EQ(0, destroyed);
-  cref->Unref();
+  cref->Unref(-1);
   ASSERT_EQ(1, destroyed);
 }
 
 TEST_F(RefTest, ReturnOfUnref) {
   MyRef* ref = new MyRef;
   ref->Ref();
-  EXPECT_FALSE(ref->Unref());
-  EXPECT_TRUE(ref->Unref());
+  EXPECT_FALSE(ref->Unref(-1));
+  EXPECT_TRUE(ref->Unref(-1));
 }
 
 TEST_F(RefTest, ScopedUnref) {

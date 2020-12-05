@@ -91,7 +91,7 @@ class TrackingAllocator : public Allocator {
   ~TrackingAllocator() override {}
 
  private:
-  bool UnRef() EXCLUSIVE_LOCKS_REQUIRED(mu_);
+  bool UnRef(int) EXCLUSIVE_LOCKS_REQUIRED(mu_);
 
   Allocator* allocator_;  // not owned.
   mutable mutex mu_;

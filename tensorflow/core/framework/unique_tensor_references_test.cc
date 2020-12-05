@@ -39,7 +39,7 @@ TEST(UniquifyTensors, TestUniqueVector) {
     EXPECT_TRUE(tensors[0].SharesBufferWith(b));
   }
   for (auto& t : tensors) {
-    t.Unref();
+    t.Unref(-1);
   }
 }
 
@@ -58,7 +58,7 @@ TEST(UniquifyTensors, TestNonUniqueVector) {
   EXPECT_TRUE(tensors[0].SharesBufferWith(a));
   EXPECT_TRUE(tensors[0].SharesBufferWith(b));
   for (auto& t : tensors) {
-    t.Unref();
+    t.Unref(-1);
   }
 }
 
@@ -92,7 +92,7 @@ TEST(UniquifyTensors, TestUniqueSet) {
   refs.FreezeAndReturnReferences(&tensors);
   EXPECT_EQ(5, tensors.size());
   for (auto& t : tensors) {
-    t.Unref();
+    t.Unref(-1);
   }
 }
 
@@ -117,7 +117,7 @@ TEST(UniquifyTensors, TestNonUniqueSet) {
   refs.FreezeAndReturnReferences(&tensors);
   EXPECT_EQ(5, tensors.size());
   for (auto& t : tensors) {
-    t.Unref();
+    t.Unref(-1);
   }
 }
 

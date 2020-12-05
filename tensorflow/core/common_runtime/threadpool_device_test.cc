@@ -65,7 +65,7 @@ TEST(ThreadPoolDeviceTest, CopyTensor) {
   note.WaitForNotification();
   ASSERT_TRUE(Equal(input, output));
 
-  device_context->Unref();
+  device_context->Unref(-1);
 }
 
 }  // namespace

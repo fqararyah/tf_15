@@ -18,6 +18,7 @@ limitations under the License.
 
 #include <unordered_map>
 #include <vector>
+#include <map>
 
 #include "absl/strings/str_join.h"
 #include "tensorflow/core/common_runtime/device.h"
@@ -203,6 +204,12 @@ class Member {
 // device is ignored.
 class ColocationGraph {
  public:
+ //*fareed
+  static std::map<string, bool> recorded_nodes;
+  static bool first_pass;
+  string to_write;
+  static std::ofstream fout;
+  //*end fareed
   // graph, flib_def, and device_set must not be null and must outlive
   // this ColocationGraph. default_local_device can be null. If not, must
   // outlive this.

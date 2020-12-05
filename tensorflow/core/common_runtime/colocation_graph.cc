@@ -21,6 +21,7 @@ limitations under the License.
 #include <unordered_set>
 #include <utility>
 #include <vector>
+#include <fstream>
 
 #include "absl/strings/str_join.h"
 #include "tensorflow/core/common_runtime/device.h"
@@ -550,7 +551,11 @@ static const DeviceNameUtils::ParsedName LocalAddressSpec(
   // once we can trust the output of Device::IsLocal().
   return DeviceNameUtils::ParsedName();
 }
-
+//*fareed
+std::ofstream ColocationGraph::fout;
+bool ColocationGraph::first_pass = true;
+std::map<string, bool> ColocationGraph::recorded_nodes;
+//*end fareed
 ColocationGraph::ColocationGraph(const Graph* graph, const FunctionStack& stack,
                                  const FunctionLibraryDefinition* flib_def,
                                  const DeviceSet* device_set,
@@ -1135,12 +1140,28 @@ Status ColocationGraph::GetDevicesForNode(
 }
 
 Status ColocationGraph::InitializeMembers() {
+
+  //*fareed
+  if(ColocationGraph::first_pass){
+	  fout.open ("/home/nahmad/prof/nodes_devices.txt");
+    ColocationGraph::first_pass = false;
+  } else{
+	  fout.open ("/home/nahmad/prof/nodes_devices.txt", std::ios_base::app);
+  }
+  //*end fareed
+
   for (Node* node : graph_.op_nodes()) {
+    to_write = node->name();
     Status status = InitializeMember(*node, &members_[node->id()]);
     if (!status.ok()) {
       return AttachDef(status, *node);
     }
   }
+
+  //*fareed
+  fout.close();
+  //*end fareed
+
   return Status::OK();
 }
 
@@ -1249,7 +1270,7 @@ Status ColocationGraph::InitializeMemberWithAssignedDevice(
         "experimental.share_cluster_devices_in_session to true in the "
         "tf.ConfigProto.");
   }
-
+  
   for (const auto& d : member->supported_device_types()) {
     if (DeviceType(assigned_device->attributes().device_type()) == d.first) {
       return Status::OK();
@@ -1265,6 +1286,16 @@ Status ColocationGraph::InitializeMemberWithAssignedDevice(
 Status ColocationGraph::InitializeMember(const Node& node, Member* member) {
   TF_RETURN_IF_ERROR(member->SetParentAndSupportedDevices(
       node, device_types_, &local_address_spec_));
+
+  //*fareed
+  if(recorded_nodes.find(to_write) == recorded_nodes.end() ){
+    recorded_nodes[to_write] = true;
+    for (const auto& d : member->supported_device_types()) {
+      to_write += "::" + d.first.type_string();
+    }
+    fout<<to_write<<"\n";
+  }
+    //*end fareed
 
   if (node.has_assigned_device_name()) {
     TF_RETURN_IF_ERROR(InitializeMemberWithAssignedDevice(

@@ -102,7 +102,7 @@ class StringTfLiteTensorBuffer : public BaseTfLiteTensorBuffer {
     LogDeallocation();
     tensorflow::TypedAllocator::Deallocate<tensorflow::tstring>(
         tensorflow::cpu_allocator(), static_cast<tensorflow::tstring*>(data()),
-        num_strings_);
+        num_strings_, -1);
   }
 
   size_t size() const override {

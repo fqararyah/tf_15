@@ -21,6 +21,9 @@ limitations under the License.
 #include "tensorflow/core/lib/core/errors.h"
 #include "tensorflow/core/lib/core/status.h"
 
+#include <fstream>
+
+
 namespace tensorflow {
 namespace data {
 namespace {
@@ -301,6 +304,12 @@ class SingleThreadedExecutorImpl : public Executor {
           // ensure that the necessary validation has already happened.
           inputs[output_location].Init(*val.tensor);
         }
+        //*fareed
+        /* std::ofstream fout;
+        fout.open ("/home/nahmad/all_ds.txt", std::ios_base::app);
+        fout<<"single_threaded::\n";  
+        fout.close(); */
+        //*end fareed
         delete val.tensor;
       }
     }

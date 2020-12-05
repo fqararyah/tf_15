@@ -134,7 +134,7 @@ TEST_F(TRTEngineResourceOpsTest, Basic) {
   resource->cache_.emplace(
       std::vector<TensorShape>{TensorShape({1, 1})},
       absl::make_unique<EngineContext>(std::move(engine), std::move(context)));
-  resource->Unref();
+  resource->Unref(-1);
 
   // Serialize the engine using SerializeTRTResource op.
   Reset();
@@ -186,7 +186,7 @@ TEST_F(TRTEngineResourceOpsTest, Basic) {
   TF_ASSERT_OK(RunOpKernel());
   EXPECT_TRUE(rm->Lookup(container, resource_name, &resource).ok());
   EXPECT_EQ(1, resource->cache_.size());
-  resource->Unref();
+  resource->Unref(-1);
 
   // Destroy the engine cache again.
   Reset();

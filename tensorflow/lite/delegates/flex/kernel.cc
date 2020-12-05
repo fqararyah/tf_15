@@ -154,7 +154,7 @@ class OpOutputs {
   void ResetTensorHandles() {
     for (int i = 0; i < vector_.size(); ++i) {
       if (vector_[i]) {
-        vector_[i]->Unref();
+        vector_[i]->Unref(-1);
         vector_[i] = nullptr;
       }
     }

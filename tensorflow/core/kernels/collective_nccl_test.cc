@@ -82,7 +82,7 @@ class NcclTestBase : public ::testing::Test {
   NcclTestBase(CollectiveType collective_type, const string& collective_name)
       : collective_type_(collective_type), collective_name_(collective_name) {}
   ~NcclTestBase() override {
-    if (col_exec_) col_exec_->Unref();
+    if (col_exec_) col_exec_->Unref(-1);
   }
 
   void InitGPUDevices() {
@@ -339,7 +339,7 @@ class NcclTestBase : public ::testing::Test {
         CHECK(output_.CopyFrom(*ctx.mutable_output(0), input_.shape()));
       }
 
-      op_params.op_device_context->Unref();
+      op_params.op_device_context->Unref(-1);
     }
 
     void RunBroadcast() {
@@ -370,7 +370,7 @@ class NcclTestBase : public ::testing::Test {
         CHECK(output_.CopyFrom(input_, input_.shape()));
       }
 
-      op_params.op_device_context->Unref();
+      op_params.op_device_context->Unref(-1);
     }
 
     void RunGather() {
@@ -406,7 +406,7 @@ class NcclTestBase : public ::testing::Test {
       });
       note.WaitForNotification();
 
-      op_params.op_device_context->Unref();
+      op_params.op_device_context->Unref(-1);
     }
 
     NcclTestBase* parent_;

@@ -99,7 +99,7 @@ class Device : public DeviceBase {
   virtual void ConsumeListOfAccessedTensors(
       DeviceContext* context, const TensorReferenceVector& tensors) {
     for (const auto& ref : tensors) {
-      ref.Unref();
+      ref.Unref(-1);
     }
   }
 

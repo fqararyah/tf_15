@@ -99,8 +99,8 @@ TEST_F(RemoteMgrTest, LocalTensorHandle) {
       remote_mgr.GetTensorHandle(RemoteTensorHandleInternal(remote_handle), &h)
           .ok());
 
-  deserialized_handle->Unref();
-  handle->Unref();
+  deserialized_handle->Unref(-1);
+  handle->Unref(-1);
 }
 
 TEST_F(RemoteMgrTest, SerializeLocalTensorHandleWithRemoteMirror) {
@@ -123,7 +123,7 @@ TEST_F(RemoteMgrTest, SerializeLocalTensorHandleWithRemoteMirror) {
   EXPECT_EQ(op_id, remote_handle.op_id());
   EXPECT_EQ(output_num, remote_handle.output_num());
   EXPECT_EQ(remote_device_->name(), remote_handle.device());
-  handle->Unref();
+  handle->Unref(-1);
 }
 
 TEST_F(RemoteMgrTest, SerializeRemoteTensorHandle) {
@@ -143,7 +143,7 @@ TEST_F(RemoteMgrTest, SerializeRemoteTensorHandle) {
   EXPECT_EQ(op_id, remote_handle.op_id());
   EXPECT_EQ(output_num, remote_handle.output_num());
   EXPECT_EQ(remote_device_->name(), remote_handle.device());
-  handle->Unref();
+  handle->Unref(-1);
 }
 
 }  // namespace

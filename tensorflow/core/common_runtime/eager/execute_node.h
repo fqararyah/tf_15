@@ -75,11 +75,11 @@ class ExecuteNode : public EagerNode {
     // all the output handles.
 
     for (auto handle : retvals_) {
-      handle->Unref();
+      handle->Unref(-1);
     }
 
     for (auto handle : inputs_) {
-      handle->Unref();
+      handle->Unref(-1);
     }
 
     return status;
@@ -88,11 +88,11 @@ class ExecuteNode : public EagerNode {
   void Abort(Status status) override {
     for (auto handle : retvals_) {
       handle->Poison(status);
-      handle->Unref();
+      handle->Unref(-1);
     }
 
     for (auto handle : inputs_) {
-      handle->Unref();
+      handle->Unref(-1);
     }
   }
 

@@ -232,7 +232,7 @@ void BaseCollectiveExecutor::ExecuteAsync(OpKernelContext* ctx,
       Ref();  // Ensure this lasts until the closure executes.
       SchedNonBlockingClosureAfter(1000000, [this, s] {
         remote_access_->buf_rendezvous()->StartAbort(s);
-        Unref();
+        Unref(-1);
       });
     }
     done(s);

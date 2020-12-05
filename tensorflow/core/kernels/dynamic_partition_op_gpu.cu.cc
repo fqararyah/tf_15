@@ -316,13 +316,13 @@ class DynamicPartitionOpGPU : public AsyncOpKernel {
       OpOutputList outputs;
       this->AllocateOutputs(c, &data, &partitions, &cpu_tensor, &outputs, done);
       if (!c->status().ok()) {
-        partition_ref.Unref();
+        partition_ref.Unref(-1);
         return;
       }
       int32 N = partitions.NumElements();
       int64 slice_size = data.NumElements() / N;
       this->GatherSlices(c, &data, &indices_out, N, slice_size, outputs);
-      partition_ref.Unref();
+      partition_ref.Unref(-1);
       done();
     };
 

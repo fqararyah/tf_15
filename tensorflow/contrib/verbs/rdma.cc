@@ -1254,7 +1254,7 @@ void RdmaTensorResponse::SendErrorStatus(const Status& status) {
 
 void RdmaTensorResponse::Destroy() {
   if (src_buffer_ != nullptr) {
-    src_buffer_->Unref();
+    src_buffer_->Unref(-1);
   }
   if (tensor_ != nullptr) {
     delete tensor_;

@@ -192,11 +192,11 @@ void XlaDeviceContext::CopyCPUTensorToDevice(const Tensor* cpu_tensor,
     // a) all consumers of the device tensor will wait for its definition event.
     // b) if the tensor is destroyed, then the memory allocator will not hand
     //    out the same buffers until the transfer has completed.
-    host_to_device_stream_->ThenDoHostCallback([ref]() { ref.Unref(); });
+    host_to_device_stream_->ThenDoHostCallback([ref]() { ref.Unref(-1); });
     done(status);
   } else {
     host_to_device_stream_->ThenDoHostCallback([ref, done]() {
-      ref.Unref();
+      ref.Unref(-1);
       done(Status::OK());
     });
   }
@@ -267,7 +267,7 @@ void XlaDeviceContext::CopyDeviceTensorToCPU(const Tensor* device_tensor,
           done_status.Update(xla_tensor->RefreshStatusOfStreams());
         }
         done(done_status);
-        ref.Unref();
+        ref.Unref(-1);
       });
 }
 

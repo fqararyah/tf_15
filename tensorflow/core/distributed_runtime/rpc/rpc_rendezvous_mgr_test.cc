@@ -252,7 +252,7 @@ TEST_F(RpcRendezvousMgrTest, TransferDummyDeviceContext) {
     n.WaitForNotification();
   }
   rmgr_.Cleanup(step_id);
-  dc->Unref();
+  dc->Unref(-1);
 }
 
 // NOTE: Remote Send/Recv is better tested in worker_test.cc

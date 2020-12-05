@@ -227,7 +227,7 @@ NcclManager::~NcclManager() {
         nccl_stream->shutdown_requested = true;
         nccl_stream->cv.notify_all();
       }
-      nccl_stream->Unref();
+      nccl_stream->Unref(-1);
     }
   }
 }
@@ -356,7 +356,7 @@ Status NcclManager::GetCommunicator(NcclManager::Collective* collective,
       nccl_stream->Ref();
       env->SchedClosure([this, nccl_stream]() {
         LoopKernelLaunches(nccl_stream);
-        nccl_stream->Unref();
+        nccl_stream->Unref(-1);
       });
     }
 
@@ -613,7 +613,7 @@ void NcclManager::RunCollective(Collective* collective) {
     for (int i = 0; i < collective->num_local_devices; ++i) {
       collective->participants[i]->done_callback(status);
     }
-    collective->Unref();
+    collective->Unref(-1);
     return;
   }
 
@@ -634,7 +634,7 @@ void NcclManager::RunCollective(Collective* collective) {
       nccl_stream->cv.notify_all();
     }
   }
-  collective->Unref();
+  collective->Unref(-1);
 }
 
 void NcclManager::LoopKernelLaunches(NcclStream* nccl_stream) {
@@ -701,7 +701,7 @@ void NcclManager::LoopKernelLaunches(NcclStream* nccl_stream) {
         if (num_elements < 0) {
           p->done_callback(errors::Internal(
               "Both input and output are null in ncclBroadcast"));
-          collective->Unref();
+          collective->Unref(-1);
           continue;
         }
         VLOG(2) << "call NcclBroadcast collective_key "
@@ -754,7 +754,7 @@ void NcclManager::LoopKernelLaunches(NcclStream* nccl_stream) {
         collective->participants[p_idx]->done_callback(errors::Unknown(
             "Error invoking NCCL: ", ncclGetErrorString(nccl_result)));
       }
-      collective->Unref();
+      collective->Unref(-1);
     };
     p->event_mgr->ThenExecute(comm_stream, done_callback);
   }

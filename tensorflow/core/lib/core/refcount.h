@@ -41,7 +41,7 @@ class RefCounted {
   // positive, returns false.  When the count reaches zero, returns
   // true and deletes this, in which case the caller must not access
   // the object afterward.
-  bool Unref() const;
+  bool Unref(int) const;
 
   // Return whether the reference count is one.
   // If the reference count is used in the conventional way, a
@@ -68,13 +68,6 @@ class RefCounted {
 // A deleter class to form a std::unique_ptr that unrefs objects.
 struct RefCountDeleter {
   void operator()(tensorflow::core::RefCounted* o) const {
-    //**fareed
-    std::ofstream fout;
-    fout.open ("/home/nahmad/all_ds.txt", std::ios_base::app);
-    //std::string tmp_name(tensor_name);
-    fout<<"RefCountDeleter::"<<"\n";  
-    fout.close();
-    //**fareed
      o->Unref(161); }
 };
 
@@ -88,13 +81,6 @@ class ScopedUnref {
   explicit ScopedUnref(RefCounted* o) : obj_(o) {}
   ~ScopedUnref() {
     if (obj_) obj_->Unref(162);
-    //**fareed
-    std::ofstream fout;
-    fout.open ("/home/nahmad/all_ds.txt", std::ios_base::app);
-    //std::string tmp_name(tensor_name);
-    fout<<"scoped_unref::"<<"\n";  
-    fout.close();
-    //**fareed
   }
 
  private:
@@ -122,11 +108,11 @@ inline bool RefCounted::Unref(int caller_id) const {
     // Make DCHECK in ~RefCounted happy
     DCHECK((ref_.store(0), true));
     //**fareed
-    std::ofstream fout;
+    /* std::ofstream fout;
     fout.open ("/home/nahmad/all_ds.txt", std::ios_base::app);
     std::string tmp_name(tensor_name);
    fout<<"TensorReference::"<<tmp_name<<"::"<<caller_id<<"\n";
-    fout.close();
+    fout.close(); */
     //**fareed
     delete this;
     return true;

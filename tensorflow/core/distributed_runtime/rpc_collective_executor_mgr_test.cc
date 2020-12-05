@@ -73,7 +73,7 @@ TEST_F(RpcCollectiveExecutorMgrTest, FindOrCreate) {
   delete h2;
   CollectiveExecutor* ce2 = cme_->FindOrCreate(1);
   EXPECT_EQ(ce, ce2);
-  ce2->Unref();
+  ce2->Unref(-1);
   cme_->Cleanup(1);
 }
 

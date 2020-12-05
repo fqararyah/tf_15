@@ -1859,7 +1859,7 @@ TEST_F(FunctionLibraryRuntimeTest, CrossDevice) {
       y,
       test::AsTensor<tstring>({"/job:localhost/replica:0/task:0/device:CPU:1"},
                               TensorShape({})));
-  opts.rendezvous->Unref();
+  opts.rendezvous->Unref(-1);
 }
 
 namespace {

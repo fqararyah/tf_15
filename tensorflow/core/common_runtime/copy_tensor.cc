@@ -26,6 +26,8 @@ limitations under the License.
 #include "tensorflow/core/platform/tracing.h"
 #include "tensorflow/core/util/reffed_status_callback.h"
 
+#include <fstream>
+
 namespace tensorflow {
 namespace {
 
@@ -253,6 +255,12 @@ void CopyTensor::ViaDMA(StringPiece edge_name, DeviceContext* send_dev_context,
                      // Begin unbound arguments.
                      const Status& status) {
           delete cpu_tensor;
+          //*fareed
+        /* std::ofstream fout;
+        fout.open ("/home/nahmad/all_ds.txt", std::ios_base::app);
+        fout<<"copy_tnsor::\n";  
+        fout.close(); */
+        //*end fareed
           done_(status);
         },
         std::move(done), std::placeholders::_1);

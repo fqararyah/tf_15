@@ -359,7 +359,7 @@ TEST_F(LocalRendezvousTest, RecvAbort) {
   rendez_->Ref();
   SchedClosure([this]() {
     rendez_->StartAbort(errors::Aborted(""));  // abort
-    rendez_->Unref();
+    rendez_->Unref(-1);
   });
   Tensor val(DT_STRING);
   bool val_dead = false;
@@ -375,7 +375,7 @@ TEST_F(LocalRendezvousTest, RecvSleepAbort) {
   SchedClosure([this]() {
     Env::Default()->SleepForMicroseconds(1000000);
     rendez_->StartAbort(errors::Aborted(""));  // abort
-    rendez_->Unref();
+    rendez_->Unref(-1);
   });
   Tensor val(DT_STRING);
   bool val_dead = false;
@@ -430,8 +430,8 @@ TEST_F(LocalRendezvousTest, TransferDummyDeviceContext) {
       });
 
   n.WaitForNotification();
-  args.device_context->Unref();
-  args1.device_context->Unref();
+  args.device_context->Unref(-1);
+  args1.device_context->Unref(-1);
 }
 
 void BM_SendRecv(int iters) {

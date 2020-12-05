@@ -28,7 +28,7 @@ namespace tensorflow {
 // it is cheaper to construct/move, but the only thing you can really do
 // with it is Unref it, which releases one of the references to the underlying
 // TensorBuffer.
-// IMPORTANT: If you do not call Unref(), you will likely leak tensor memory.
+// IMPORTANT: If you do not call Unref(-1), you will likely leak tensor memory.
 class TensorReference {
  public:
   // Take the reference of the root buffer so the size will be more accurate
@@ -36,7 +36,7 @@ class TensorReference {
 
   ~TensorReference() {}
 
-  void Unref() const {
+  void Unref(int caller_id) const {
     if (buf_) {buf_->Unref(150);
     }
   }

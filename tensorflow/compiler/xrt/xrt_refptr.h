@@ -23,7 +23,7 @@ limitations under the License.
 namespace tensorflow {
 
 // Reference counted smart pointer for XRT objects providing the standard
-// Ref()/Unref() APIs.
+// Ref()/Unref(-1) APIs.
 template <typename T>
 class RefPtr {
  public:
@@ -90,7 +90,7 @@ class RefPtr {
  private:
   static void Release(T* ptr) {
     if (ptr != nullptr) {
-      ptr->Unref();
+      ptr->Unref(-1);
     }
   }
 

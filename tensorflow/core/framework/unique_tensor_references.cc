@@ -24,7 +24,7 @@ UniqueTensorReferences::~UniqueTensorReferences() {
     TensorReferenceVector refs;
     FreezeAndReturnReferences(&refs);
     for (auto& tensor : refs) {
-      tensor.Unref();
+      tensor.Unref(-1);
     }
   }
   delete referenced_tensors_set_;
@@ -40,7 +40,7 @@ void UniqueTensorReferences::Add(const Tensor& tensor) {
       const TensorReference tensor_ref(tensor);
       if (!referenced_tensors_set_->insert(tensor_ref).second) {
         // The tensor was a duplicate, so discard the reference.
-        tensor_ref.Unref();
+        tensor_ref.Unref(-1);
       }
     } else {
       for (size_t i = 0; i < referenced_tensors_vector_.size(); ++i) {

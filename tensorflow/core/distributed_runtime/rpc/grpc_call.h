@@ -175,7 +175,7 @@ class Call : public UntypedCall<Service> {
   void SendResponse(::grpc::Status status) {
     this->Ref();  // Ref for grpc; released in Tag callback.
     responder_.Finish(response, status, &response_sent_tag_);
-    this->Unref();
+    this->Unref(-1);
   }
 
   void RequestCancelled(Service* service, bool ok) override {

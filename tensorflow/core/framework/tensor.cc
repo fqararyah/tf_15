@@ -154,7 +154,7 @@ struct Helper {
     Buffer<T>* buf = new Buffer<T>(a, n);
     char* data = buf->template base<char>();
     if (data == nullptr) {
-      buf->Unref();
+      buf->Unref(273);
       return nullptr;
     }
     port::CopyToArray(in, data);
@@ -463,7 +463,7 @@ Buffer<T>::~Buffer() {
     if (LogMemory::IsEnabled()) {
       RecordDeallocation();
     }
-    TypedAllocator::Deallocate<T>(alloc_, static_cast<T*>(data()), elem_);
+    TypedAllocator::Deallocate<T>(alloc_, static_cast<T*>(data()), elem_, 1);
   }
 }
 
@@ -483,7 +483,7 @@ TensorBuffer* FromProtoField(Allocator* a, const TensorProto& in, int64 n) {
   Buffer<T>* buf = new Buffer<T>(a, n);
   T* data = buf->template base<T>();
   if (data == nullptr) {
-    buf->Unref();
+    buf->Unref(274);
     return nullptr;
   }
 
@@ -608,16 +608,15 @@ void RefIfNonNull(core::RefCounted* buf) {
   if (buf) buf->Ref();
 }
 
-void UnrefIfNonNull(core::RefCounted* buf) {
+void UnrefIfNonNull(core::RefCounted* buf, int caller_id) {
   if (buf){
-    //*fareed
-  std::ofstream fout;
-  fout.open ("/home/nahmad/all_ds.txt", std::ios_base::app);
-  //std::string tmp_name(tensor_name);
-  fout<<"ifnotnull::"<<"\n";  
-  fout.close();
-  //*fareed
     buf->Unref(158);
+    //*fareed
+      /* ofstream fout;
+			fout.open ("/home/nahmad/all_ds.txt", std::ios_base::app);
+			fout<<"::UnrefIfNonNull::"<<caller_id<<"\n";  
+			fout.close(); */
+      //*end fareed
   }
 }
 
@@ -657,7 +656,7 @@ void Tensor::CheckIsAlignedAndSingleElement() const {
 }
 
 Tensor::~Tensor() {
-  UnrefIfNonNull(buf_); 
+  UnrefIfNonNull(buf_, 1); 
 }
 
 void Tensor::CopyFromInternal(const Tensor& other, const TensorShape& shape) {
@@ -668,7 +667,7 @@ void Tensor::CopyFromInternal(const Tensor& other, const TensorShape& shape) {
   shape_ = shape;
   set_dtype(other_dtype);
   if (buf_ != other.buf_) {
-    UnrefIfNonNull(buf_);
+    UnrefIfNonNull(buf_, 2);
     buf_ = other.buf_;
     RefIfNonNull(buf_);
   }
@@ -692,7 +691,7 @@ Status Tensor::BitcastFrom(const Tensor& other, DataType dtype,
   shape_ = shape;
   shape_.set_data_type(dtype);
   if (buf_ != other.buf_) {
-    UnrefIfNonNull(buf_);
+    UnrefIfNonNull(buf_, 3);
     buf_ = other.buf_;
     RefIfNonNull(buf_);
   }
@@ -835,13 +834,6 @@ class SubBuffer : public TensorBuffer {
   int64 elem_;
 
   ~SubBuffer() override {
-    //*fareed
-    std::ofstream fout;
-    fout.open ("/home/nahmad/all_ds.txt", std::ios_base::app);
-    //std::string tmp_name(tensor_name);
-    fout<<"sub::"<<"\n";  
-    fout.close();
-    //*fareed
     root_->Unref(159);
   }
 
@@ -922,7 +914,7 @@ bool Tensor::FromProto(Allocator* a, const TensorProto& proto) {
   }
   shape_ = shape;
   set_dtype(proto.dtype());
-  UnrefIfNonNull(buf_);
+  UnrefIfNonNull(buf_, 4);
   buf_ = p;
   // TODO(misard) add tracking of which kernels and steps are calling
   // FromProto.

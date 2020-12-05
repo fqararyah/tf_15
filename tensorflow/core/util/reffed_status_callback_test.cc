@@ -37,7 +37,7 @@ TEST(TestReffedStatusCallback, CallsBackOK) {
   };
   auto* cb = new ReffedStatusCallback(std::move(done));
   EXPECT_FALSE(called);
-  cb->Unref();
+  cb->Unref(-1);
   EXPECT_TRUE(called);
   EXPECT_TRUE(status.ok());
 }
@@ -53,7 +53,7 @@ TEST(TestReffedStatusCallback, CallsBackFail) {
   cb->UpdateStatus(errors::Internal("1"));
   cb->UpdateStatus(errors::InvalidArgument("2"));
   EXPECT_FALSE(called);
-  cb->Unref();
+  cb->Unref(-1);
   EXPECT_TRUE(called);
   // Equal to the first error.
   EXPECT_EQ(status.code(), error::INTERNAL);
@@ -74,10 +74,10 @@ TEST(TestReffedStatusCallback, RefMulti) {
   cb->UpdateStatus(errors::Internal("1"));
   cb->Ref();
   cb->UpdateStatus(errors::Internal("2"));
-  cb->Unref();
-  cb->Unref();
+  cb->Unref(-1);
+  cb->Unref(-1);
   EXPECT_FALSE(called);
-  cb->Unref();  // Created by constructor.
+  cb->Unref(-1);  // Created by constructor.
   EXPECT_TRUE(called);
   // Both errors are reported.
   EXPECT_TRUE(absl::StrContains(status.error_message(), "Internal: 1"));
@@ -102,12 +102,12 @@ TEST(TestReffedStatusCallback, MultiThreaded) {
     cb->Ref();
     threads.Schedule([cb]() {
       cb->UpdateStatus(errors::InvalidArgument("err"));
-      cb->Unref();
+      cb->Unref(-1);
     });
   }
 
   // Subtract one for the initial (construction) reference.
-  cb->Unref();
+  cb->Unref(-1);
 
   n.WaitForNotification();
 

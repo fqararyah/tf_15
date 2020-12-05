@@ -841,7 +841,7 @@ inline void RunIfBoxIndexIsValid<GPUDevice>(
     auto stream = context->op_device_context()->stream();
     ScopedActivateExecutorContext scoped_activation{stream->parent()};
     const bool isvalid = isvalid_host_tensor.scalar<bool>()();
-    isvalid_dev_ref.Unref();
+    isvalid_dev_ref.Unref(-1);
     OP_REQUIRES_ASYNC(
         context, isvalid,
         errors::OutOfRange("box_index has values outside [0, batch_size)"),

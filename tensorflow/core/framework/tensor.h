@@ -96,6 +96,7 @@ class TensorBuffer : public core::RefCounted {
 class Tensor {
  public:
   //*fareed
+  string f_tensor_name;
   TensorBuffer* buf_;
   //*end fareed
   /// \brief Creates a 1-dimensional, 0-element float tensor.
@@ -957,7 +958,7 @@ struct Tensor::ValueAndTensorBuffer {
     TensorBuffer* root_buffer() final { return this; }
 
     // Override `operator delete` so that calling `delete this` in
-    // `core::Refcounted::Unref()` for an object of this type will free
+    // `core::Refcounted::Unref(-1)` for an object of this type will free
     // the enclosing `ValueAndTensorBuffer` for the tensor buffer.
     //
     // NOTE(mrry): The definition of this method must be outside the class

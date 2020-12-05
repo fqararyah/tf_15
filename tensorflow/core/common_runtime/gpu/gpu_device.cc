@@ -335,7 +335,7 @@ BaseGPUDevice::BaseGPUDevice(const SessionOptions& options, const string& name,
 BaseGPUDevice::~BaseGPUDevice() {
   delete gpu_device_info_;
   for (auto sb : scratch_) gpu_allocator_->DeallocateRaw(sb);
-  for (auto ctx : device_contexts_) ctx->Unref();
+  for (auto ctx : device_contexts_) ctx->Unref(274);
 }
 
 // This should be idempotent if already initialized.

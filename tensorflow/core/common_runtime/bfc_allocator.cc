@@ -446,7 +446,7 @@ void* BFCAllocator::FindChunkPtr(BinNum bin_num, size_t rounded_bytes,
       if (freed_before > 0 && freed_before < chunk->freed_at_count) {
 		  //*fareed
 		//cout<<"allocated::"<<op_name_<<"::"<<num_bytes<<"\n";// + allocated_<<"\n";
-		string str_ = "allocated1::" + op_name_;
+		/* string str_ = "allocated1::" + op_name_;
 		if(Allocator::mp.find(op_name_) == Allocator::mp.end() or chunk->size > Allocator::mp[op_name_]){
 			if(Allocator::allocated_deallocated_times.find(op_name_) == Allocator::allocated_deallocated_times.end()){
 				Allocator::allocated_deallocated_times[op_name_] = 0;
@@ -457,7 +457,7 @@ void* BFCAllocator::FindChunkPtr(BinNum bin_num, size_t rounded_bytes,
 			fout.open ("/home/nahmad/res_nodes.txt", std::ios_base::app);
 			fout<<str_<<"::"<<chunk->size<<"\n";  
 			fout.close();
-		}
+		} */
 		//*end fareed
         continue;
       }
@@ -489,7 +489,7 @@ void* BFCAllocator::FindChunkPtr(BinNum bin_num, size_t rounded_bytes,
 		
 		//*fareed
 		//cout<<"allocated::"<<op_name_<<"::"<<num_bytes<<"\n";// + allocated_<<"\n";
-		string str_ = "allocated::" + op_name_;
+		/* string str_ = "allocated::" + op_name_;
 		if(Allocator::mp.find(op_name_) == Allocator::mp.end() or chunk->size > Allocator::mp[op_name_]){
 			if(Allocator::allocated_deallocated_times.find(op_name_) == Allocator::allocated_deallocated_times.end()){
 				Allocator::allocated_deallocated_times[op_name_] = 0;
@@ -500,7 +500,7 @@ void* BFCAllocator::FindChunkPtr(BinNum bin_num, size_t rounded_bytes,
 			fout.open ("/home/nahmad/res_nodes.txt", std::ios_base::app);
 			fout<<str_<<"::"<<chunk->size<<"\n";  
 			fout.close();
-		}
+		} */
 		//*end fareed
 		
         stats_.bytes_in_use += chunk->size;
@@ -674,19 +674,13 @@ void BFCAllocator::MarkFree(BFCAllocator::ChunkHandle h) {
   }
   
   //*fareed
-  if(Allocator::mp.find(op_name_) != Allocator::mp.end() and Allocator::allocated_deallocated_times[op_name_] > 0){  
+  /* if(Allocator::mp.find(op_name_) != Allocator::mp.end() and Allocator::allocated_deallocated_times[op_name_] > 0){  
 		Allocator::allocated_deallocated_times[op_name_]--;
 		std::ofstream fout;
 		fout.open ("/home/nahmad/res_nodes.txt", std::ios_base::app);
 		fout<<"deallocated::"<<op_name_<<"::"<< c->size <<"\n"; 
 		fout.close();
-	}
-
-  /* std::ofstream fout;
-  fout.open ("/home/nahmad/all_ds.txt", std::ios_base::app);
-	fout<<op_name_<<"::bfc_deallocated\n";  
-	fout.close(); */
-	//*end fareed
+	} */
 
   // Updates the stats.
   stats_.bytes_in_use -= c->size;

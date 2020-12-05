@@ -404,7 +404,7 @@ TEST_F(OpKernelTest, SaveTempTrue) {
   ctx->retrieve_accessed_tensors(&referenced_tensors);
   EXPECT_EQ(1, referenced_tensors.size());
   for (auto& ref : referenced_tensors) {
-    ref.Unref();
+    ref.Unref(-1);
   }
 }
 

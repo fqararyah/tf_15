@@ -144,7 +144,7 @@ TEST_F(ResourceOpKernelTest, PrivateResource) {
       mgr_.Lookup<StubResource>(mgr_.default_container(), key, &resource));
   EXPECT_EQ(op->resource(), resource);  // Check resource identity.
   EXPECT_EQ(code, resource->code);      // Check resource stored information.
-  resource->Unref();
+  resource->Unref(-1);
 
   // Destroy the op kernel. Expect the resource to be released.
   op = nullptr;
@@ -166,13 +166,13 @@ TEST_F(ResourceOpKernelTest, SharedResource) {
                                          &resource));
   EXPECT_EQ(op->resource(), resource);  // Check resource identity.
   EXPECT_EQ(code, resource->code);      // Check resource stored information.
-  resource->Unref();
+  resource->Unref(-1);
 
   // Destroy the op kernel. Expect the resource not to be released.
   op = nullptr;
   TF_ASSERT_OK(mgr_.Lookup<StubResource>(mgr_.default_container(), shared_name,
                                          &resource));
-  resource->Unref();
+  resource->Unref(-1);
 }
 
 TEST_F(ResourceOpKernelTest, LookupShared) {

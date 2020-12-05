@@ -18,6 +18,7 @@ limitations under the License.
 #include <limits.h>
 #include <atomic>
 #include <vector>
+#include <fstream>
 
 #include "tensorflow/core/common_runtime/device.h"
 #include "tensorflow/core/framework/device_base.h"
@@ -268,6 +269,12 @@ void StackPushOp::ComputeAsync(OpKernelContext* ctx, DoneCallback done) {
             }
             done();
             delete cpu_tensor;
+            //*fareed
+        /* std::ofstream fout;
+        fout.open ("/home/nahmad/all_ds.txt", std::ios_base::app);
+        fout<<"stack_cpu::\n";  
+        fout.close(); */
+        //*end fareed
           });
       return;
     }
@@ -313,6 +320,12 @@ void StackPopOp::ComputeAsync(OpKernelContext* ctx, DoneCallback done) {
           }
           done();
           delete device_tensor;
+          //*fareed
+        /* std::ofstream fout;
+        fout.open ("/home/nahmad/all_ds.txt", std::ios_base::app);
+        fout<<"stack_gpu::\n";  
+        fout.close(); */
+        //*end fareed
         });
   } else {
     // Execute synchronously if not swapped.

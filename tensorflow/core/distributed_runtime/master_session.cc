@@ -1611,7 +1611,7 @@ Status MasterSession::BuildAndRegisterPartitions(ReffedClientGraph* rcg) {
   PartitionOptions popts;
   popts.node_to_loc = SplitByWorker;
   // The closures popts.{new_name,get_incarnation} are called synchronously in
-  // RegisterPartitions() below, so do not need a Ref()/Unref() pair to keep
+  // RegisterPartitions() below, so do not need a Ref()/Unref(-1) pair to keep
   // "this" alive during the closure.
   popts.new_name = [this](const string& prefix) {
     mutex_lock l(mu_);

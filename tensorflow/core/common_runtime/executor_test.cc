@@ -282,7 +282,7 @@ TEST_F(ExecutorTest, ConcurrentAddAssign) {
                               &is_dead));
     VLOG(1) << "Get " << V(out);
     EXPECT_LE(V(out), 1025.0);
-    rendez->Unref();
+    rendez->Unref(-1);
   }
 }
 #endif
@@ -343,27 +343,27 @@ TEST_F(ExecutorTest, Abort) {
     Env::Default()->SleepForMicroseconds(100 * 1000);
     Status s = rendez_->Send(Key(ALICE, kIncarnation, BOB, "a"),
                              Rendezvous::Args(), V(1.0), false);
-    rendez_->Unref();
+    rendez_->Unref(-1);
   });
   rendez_->Ref();
   SchedClosure([this]() {
     Env::Default()->SleepForMicroseconds(100 * 1000);
     Status s = rendez_->Send(Key(ALICE, kIncarnation, BOB, "b"),
                              Rendezvous::Args(), V(1.0), false);
-    rendez_->Unref();
+    rendez_->Unref(-1);
   });
   rendez_->Ref();
   SchedClosure([this]() {
     Env::Default()->SleepForMicroseconds(100 * 1000);
     Status s = rendez_->Send(Key(ALICE, kIncarnation, BOB, "c"),
                              Rendezvous::Args(), V(1.0), false);
-    rendez_->Unref();
+    rendez_->Unref(-1);
   });
   rendez_->Ref();
   SchedClosure([this]() {
     Env::Default()->SleepForMicroseconds(100 * 1000);
     rendez_->StartAbort(errors::Aborted(""));
-    rendez_->Unref();
+    rendez_->Unref(-1);
   });
   EXPECT_TRUE(errors::IsAborted(Run(rendez_)));
   Tensor out = V(-1);
@@ -399,7 +399,7 @@ TEST_F(ExecutorTest, RecvInvalidDtype) {
   bool is_dead;
   EXPECT_TRUE(errors::IsInternal(rendez->Recv(
       Key(BOB, 1, ALICE, "two"), Rendezvous::Args(), &output, &is_dead)));
-  rendez->Unref();
+  rendez->Unref(-1);
 }
 
 TEST_F(ExecutorTest, RecvInvalidRefDtype) {
@@ -414,7 +414,7 @@ TEST_F(ExecutorTest, RecvInvalidRefDtype) {
   bool is_dead;
   EXPECT_TRUE(errors::IsInternal(rendez->Recv(
       Key(BOB, 1, ALICE, "out"), Rendezvous::Args(), &output, &is_dead)));
-  rendez->Unref();
+  rendez->Unref(-1);
 }
 
 // Create a graph that is 'depth' deep. At each level, fan-in and fan-out a

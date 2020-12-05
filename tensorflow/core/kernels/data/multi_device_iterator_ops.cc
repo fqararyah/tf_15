@@ -118,7 +118,7 @@ class MultiDeviceIterator : public ResourceBase {
     MultiDeviceIteratorCallback callback = std::bind(
         [ctx](const HostBufferElement& elem, const std::function<void()>& done,
               const std::function<void()>& deregister_fn) {
-          // iterator->Unref();
+          // iterator->Unref(-1);
           Status s = elem.status;
           if (!s.ok()) {
             ctx->SetStatus(s);

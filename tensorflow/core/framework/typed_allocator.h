@@ -46,10 +46,10 @@ class TypedAllocator {
       return nullptr;
     }
     //*fareed
-    ofstream fout;
+    /* ofstream fout;
     fout.open ("/home/nahmad/all_ds.txt", std::ios_base::app);
     fout<<raw_allocator->get_op_name()<<"::allocated"<<raw_allocator->Name()<<"\n";  
-    fout.close();
+    fout.close(); */
     //*end fareed
 
     void* p =
@@ -62,14 +62,14 @@ class TypedAllocator {
 
   template <typename T>
   static void Deallocate(Allocator* raw_allocator, T* ptr,
-                         size_t num_elements) {
+                         size_t num_elements, int caller_id) {
     if (ptr) {
       RunDtor<T>(raw_allocator, ptr, num_elements);
       //*fareed
-      ofstream fout;
+      /* ofstream fout;
 			fout.open ("/home/nahmad/all_ds.txt", std::ios_base::app);
-			fout<<raw_allocator->get_op_name()<<"::deallocated"<<raw_allocator->Name()<<"\n";  
-			fout.close();
+			fout<<raw_allocator->get_op_name()<<"::deallocated"<<raw_allocator->Name()<<"::"<<caller_id<<"\n";  
+			fout.close(); */
       //*end fareed
       raw_allocator->DeallocateRaw(ptr);
     }

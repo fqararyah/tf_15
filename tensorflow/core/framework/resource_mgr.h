@@ -73,7 +73,7 @@ namespace tensorflow {
 //   if (s.ok()) {
 //     my_var->val.flat<float>() += grad;
 //   }
-//   my_var->Unref();   // Or use ScopedUnref().
+//   my_var->Unref(-1);   // Or use ScopedUnref(-1).
 //   ctx->SetStatus(s);
 class ResourceBase : public core::RefCounted {
  public:
@@ -275,14 +275,14 @@ Status CreateResource(OpKernelContext* ctx, const ResourceHandle& p, T* value);
 // Looks up a resource pointed by a given resource handle.
 //
 // If the lookup is successful, the caller takes the ownership of one ref on
-// `*value`, and must call its `Unref()` method when it has finished using it.
+// `*value`, and must call its `Unref(-1)` method when it has finished using it.
 template <typename T, bool use_dynamic_cast = false>
 Status LookupResource(OpKernelContext* ctx, const ResourceHandle& p, T** value);
 
 // Looks up a resource pointed by a given resource handle.
 //
 // Prefer usage of LookupResource taking `core::RefCountPtr` to avoid
-// requiring the caller to explicitly call `Unref()`.
+// requiring the caller to explicitly call `Unref(-1)`.
 template <typename T>
 Status LookupResource(OpKernelContext* ctx, const ResourceHandle& p,
                       core::RefCountPtr<T>* value);
@@ -296,12 +296,12 @@ Status LookupResources(OpKernelContext* ctx, absl::Span<ResourceHandle const> p,
 // Looks up or creates a resource.
 //
 // If successful, the caller takes the ownership of one ref on `*value`, and
-// must call its `Unref()` method when it has finished using it. If the
+// must call its `Unref(-1)` method when it has finished using it. If the
 // `creator` is invoked, its reference on the created resource is transferred
 // to `ctx->resource_mgr()`.
 //
 // Prefer usage of LookupOrCreateResource taking `core::RefCountPtr` to avoid
-// requiring the caller to explicitly call `Unref()`.
+// requiring the caller to explicitly call `Unref(-1)`.
 template <typename T>
 Status LookupOrCreateResource(OpKernelContext* ctx, const ResourceHandle& p,
                               T** value, std::function<Status(T**)> creator);
@@ -741,7 +741,7 @@ void IsResourceInitialized<T>::Compute(OpKernelContext* ctx) {
   bool found;
   if (LookupResource(ctx, HandleFromInput(ctx, 0), &object).ok()) {
     found = true;
-    object->Unref();
+    object->Unref(-1);
   } else {
     found = false;
   }

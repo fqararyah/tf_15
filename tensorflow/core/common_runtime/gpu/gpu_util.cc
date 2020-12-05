@@ -170,7 +170,7 @@ void GPUUtil::SetProtoFromGPU(const Tensor& tensor, Device* dev,
         if (!send_device_to_host_stream->ok()) {
           LOG(FATAL) << "SetProtoFromGPU: GPU Memcpy failed";
         }
-        tensor_ref.Unref();
+        tensor_ref.Unref(-1);
         if (total_bytes > 0) {
           port::CopyFromArray(proto->mutable_tensor_content(), buf,
                               total_bytes);
@@ -239,7 +239,7 @@ void GPUUtil::DeviceToDeviceCopy(
   dev_info->event_mgr->ThenExecute(
       send_device_to_device_stream,
       [done, send_device_to_device_stream, input_ref]() {
-        input_ref.Unref();
+        input_ref.Unref(-1);
         if (!send_device_to_device_stream->ok()) {
           LOG(FATAL) << "GPU->GPU Memcpy failed";
         }
@@ -292,7 +292,7 @@ void GPUUtil::CopyGPUTensorToCPU(Device* gpu_device,
         if (!send_device_to_host_stream->ok()) {
           LOG(FATAL) << "GPU->CPU Memcpy failed";
         }
-        input_ref.Unref();
+        input_ref.Unref(-1);
         done(Status::OK());
       });
 }
@@ -337,7 +337,7 @@ void GPUUtil::CopyCPUTensorToGPU(const Tensor* cpu_tensor,
   dev_info->event_mgr->ThenExecute(
       recv_host_to_device_stream,
       [recv_host_to_device_stream, done, input_ref]() {
-        input_ref.Unref();
+        input_ref.Unref(-1);
         if (!recv_host_to_device_stream->ok()) {
           LOG(FATAL) << "CPU->GPU Memcpy failed";
         }

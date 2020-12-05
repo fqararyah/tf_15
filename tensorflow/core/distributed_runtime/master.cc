@@ -504,7 +504,7 @@ void Master::ExtendSession(const ExtendSessionRequest* req,
     if (status.ok()) {
       status = session->Extend(req, resp);
     }
-    session->Unref();
+    session->Unref(-1);
     done(status);
   });
 }
@@ -525,7 +525,7 @@ void Master::PartialRunSetup(const PartialRunSetupRequest* req,
 
   SchedClosure([session, req, resp, done]() {
     Status s = session->PartialRunSetup(req, resp);
-    session->Unref();
+    session->Unref(-1);
     done(s);
   });
 }
@@ -692,7 +692,7 @@ void Master::MakeCallable(const MakeCallableRequest* req,
   SchedClosure(std::bind(
       [session, req, resp](MyClosure done) {
         Status s = session->MakeCallable(*req, resp);
-        session->Unref();
+        session->Unref(-1);
         done(s);
       },
       std::move(done)));
@@ -715,7 +715,7 @@ void Master::RunCallable(CallOptions* opts, const RunCallableRequest* req,
   SchedClosure(std::bind(
       [session, opts, req, resp](MyClosure done) {
         Status s = session->RunCallable(opts, *req, resp);
-        session->Unref();
+        session->Unref(-1);
         done(s);
       },
       std::move(done)));
@@ -732,7 +732,7 @@ void Master::ReleaseCallable(const ReleaseCallableRequest* req,
   SchedClosure(std::bind(
       [session, req, resp](MyClosure done) {
         Status s = session->ReleaseCallable(*req, resp);
-        session->Unref();
+        session->Unref(-1);
         done(s);
       },
       std::move(done)));

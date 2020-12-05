@@ -106,7 +106,7 @@ struct VariableInputLockHolder {
 //
 // If `input` corresponds to a `DT_RESOURCE`-type variable input,
 // `*maybe_resource` will be updated to contain the underlying resource, and the
-// caller will be responsible for calling `Unref()` on that resource.
+// caller will be responsible for calling `Unref(-1)` on that resource.
 template <typename Device, typename T>
 mutex* GetTrainingVariableMutex(OpKernelContext* ctx, int input, bool sparse,
                                 Var** maybe_resource) {

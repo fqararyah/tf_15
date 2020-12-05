@@ -119,13 +119,6 @@ void ResourceMgr::Clear() {
   for (const auto& p : tmp_containers) {
     for (const auto& q : *p.second) {
       q.second->Unref(145);
-      //*fareed
-  std::ofstream fout;
-  fout.open ("/home/nahmad/all_ds.txt", std::ios_base::app);
-  //std::string tmp_name(tensor_name);
-  fout<<"rsrc_mgr::"<<"\n";  
-  fout.close();
-  //*fareed
     }
     delete p.second;
   }
@@ -173,13 +166,6 @@ Status ResourceMgr::DoCreate(const string& container, TypeIndex type,
     TF_RETURN_IF_ERROR(InsertDebugTypeName(type.hash_code(), type.name()));
     return Status::OK();
   }
-  //*fareed
-  std::ofstream fout;
-  fout.open ("/home/nahmad/all_ds.txt", std::ios_base::app);
-  //std::string tmp_name(tensor_name);
-  fout<<"rsrc_mgr::"<<"\n";  
-  fout.close();
-  //*fareed
   resource->Unref(146);
   return errors::AlreadyExists("Resource ", container, "/", name, "/",
                                type.name());
@@ -223,13 +209,6 @@ Status ResourceMgr::DoDelete(const string& container, uint64 type_hash_code,
     b->erase(iter);
   }
   CHECK(base != nullptr);
-  //*fareed
-  std::ofstream fout;
-  fout.open ("/home/nahmad/all_ds.txt", std::ios_base::app);
-  //std::string tmp_name(tensor_name);
-  fout<<"rsrc_mgr::"<<"\n";  
-  fout.close();
-  //*fareed
   base->Unref(147);
   return Status::OK();
 }
@@ -265,13 +244,6 @@ Status ResourceMgr::Cleanup(const string& container) {
   }
   CHECK(b != nullptr);
   for (const auto& p : *b) {
-    //*fareed
-  std::ofstream fout;
-  fout.open ("/home/nahmad/all_ds.txt", std::ios_base::app);
-  //std::string tmp_name(tensor_name);
-  fout<<"rsrc_mgr::"<<"\n";  
-  fout.close();
-  //*fareed
     p.second->Unref(148);
   }
   delete b;

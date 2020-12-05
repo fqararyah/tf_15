@@ -23,6 +23,7 @@ limitations under the License.
 #include <vector>
 #include <fstream>
 #include <iostream>
+#include <cuda_runtime.h>
 
 #include "absl/memory/memory.h"
 #include "absl/strings/string_view.h"
@@ -1216,6 +1217,7 @@ class ExecutorState {
     TaggedNodeReadyQueue() : front_index_(0) {}
 
     void push_back(TaggedNode node) { ready_.push_back(node); }
+    void insert(TaggedNode node) { ready_.insert(ready_.begin(), node); }
     TaggedNode front() const {
       DCHECK_LT(front_index_, ready_.size());
       return ready_[front_index_];
@@ -1551,6 +1553,11 @@ void ExecutorState::RunAsync(Executor::DoneCallback done) {
     root_frame_->iterations[0]->outstanding_ops = ready.size();
     done_cb_ = std::move(done);
     // Schedule to run all the ready ops in thread pool.
+    /* std::cout<<"................................................\n";
+    for (Node* n : graph->op_nodes()) {
+      std::cout<< n->name()<<", ";
+    }
+    std::cout<<"\n................................................\n"; */
     ScheduleReady(ready, nullptr);
   }
 }
@@ -1622,10 +1629,11 @@ bool MightTrace(const NodeItem& item,
       profiler::GetTFTraceMeLevel(item.kernel->IsExpensive()));
 }
 
-static int read = 0;
-std::map<std::string, int> priorities_map;
+//fareed
+//static int read = 0;
+//std::map<std::string, int> priorities_map;
 void ExecutorState::Process(TaggedNode tagged_node, int64 scheduled_nsec) {
-  if(read == 0){
+  /*if(read == 0){
 	std::string a;
 	int b;
 	std::ifstream infile2("/home/nahmad/priorities.txt"); 
@@ -1635,7 +1643,7 @@ void ExecutorState::Process(TaggedNode tagged_node, int64 scheduled_nsec) {
 	}
 	infile2.close();
 	read = 1;
-  }
+  }*/
   
   WithContext wc(context_);
   const GraphView& gview = impl_->gview_;
@@ -1889,7 +1897,17 @@ void ExecutorState::Process(TaggedNode tagged_node, int64 scheduled_nsec) {
               profiler::GetTFTraceMeLevel(op_kernel->IsExpensive()));
           // 'ScopedAnnotation' will trace the OpKernel execution time.
           tracing::ScopedAnnotation annotation(kernel_label);
+          
+          //*fareed
+          //cudaEvent_t cu_stop;
+          //cudaEventCreate(&cu_stop);
+          //*end fareed
           device->Compute(op_kernel, &ctx);
+          //*fareed
+          //cudaEventRecord(cu_stop,0);
+          //cudaEventSynchronize(cu_stop);
+          //*end fareed
+
         } else {
           // In the common case, avoid creating any tracing objects.
           if (op_kernel->IsExpensive()) {
@@ -2142,6 +2160,14 @@ Status ExecutorState::ProcessOutputs(const NodeItem& item, OpKernelContext* ctx,
     if (!val.is_ref()) {
       // If OpKernelContext returns outputs via pass-by-value, we
       // don't need this trouble.
+      //*fareed
+      /* ofstream fout;
+			fout.open ("/home/nahmad/all_ds.txt", std::ios_base::app);
+      if(val.tensor != NULL){
+			  fout<<"exec::"<<val.tensor->f_tensor_name<<"\n"; 
+      } 
+			fout.close(); */
+      //*end fareed
       delete val.tensor;
     }
   }
@@ -2347,7 +2373,13 @@ void ExecutorState::ScheduleReady(const TaggedNodeSeq& ready,
     const NodeItem& item = *gview.node(tagged_node.node->id());
     if (tagged_node.is_dead || !item.kernel->IsExpensive()) {
       // Inline this inexpensive node.
-      inline_ready->push_back(tagged_node);
+      //Inline this inexpensive node.
+      //if( tagged_node.node && tagged_node.node->name() == "spl/_6" ){
+        //inline_ready->insert(tagged_node);
+        //std::cout<< tagged_node.node->name()<<"::"<<tagged_node.node->assigned_device_name()<<"\n";
+      //} else {
+        inline_ready->push_back(tagged_node);
+      //}
     } else {
       if (curr_expensive_node) {
         // Dispatch to another thread since there is plenty of work to
@@ -2358,6 +2390,20 @@ void ExecutorState::ScheduleReady(const TaggedNodeSeq& ready,
       curr_expensive_node = &tagged_node;
     }
   }
+  //*fareed
+  /* std::cout<<"++++++++++++++++++++++++++++++++++++++++++++++\n";
+  TaggedNodeReadyQueue tmp;
+  while(! inline_ready->empty()){
+    tmp.push_back(inline_ready->front());
+    if(inline_ready->front().node)std::cout<<inline_ready->front().node->name()<<",";
+    inline_ready->pop_front();
+  }
+  while(! tmp.empty()){
+    inline_ready->push_back(tmp.front());
+    tmp.pop_front();
+  }
+  std::cout<<"\n+++++++++++++++++++++++++++++++++++++++++++++\n"; */
+  //*end fareed
   if (curr_expensive_node) {
     if (inline_ready->empty()) {
       // Tail recursion optimization
@@ -2734,6 +2780,9 @@ void ExecutorState::FrameState::ActivateNodes(const NodeItem* item,
                                               const bool is_dead, int64 iter,
                                               EntryVector* outputs,
                                               TaggedNodeSeq* ready) {
+
+                                                TaggedNodeSeq tmp1, tmp2;
+
   const GraphView& gview = executor->gview_;
   IterationState* iter_state = GetIteration(iter);
   const size_t num_output_edges = item->num_output_edges;
@@ -2817,9 +2866,19 @@ void ExecutorState::FrameState::ActivateNodes(const NodeItem* item,
     // Add dst to the ready queue if it's ready
     if (dst_ready) {
       if (dst_item->is_control_trigger) dst_dead = false;
-      ready->emplace_back(dst_item->node, this, iter, dst_dead);
+      if( dst_item->node && IsSend(dst_item->node) ){
+        tmp1.emplace_back(dst_item->node, this, iter, dst_dead);
+      } else {
+        tmp2.emplace_back(dst_item->node, this, iter, dst_dead);
+      }
       iter_state->outstanding_ops++;
     }
+  }
+  for (auto& tagged_node : tmp1) {
+    ready->emplace_back(tagged_node);
+  }
+  for (auto& tagged_node : tmp2) {
+    ready->emplace_back(tagged_node);
   }
 }
 

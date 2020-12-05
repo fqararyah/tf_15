@@ -417,7 +417,7 @@ TEST_F(EagerServiceImplTest, RequestsToMasterTest) {
   TF_ASSERT_OK(eager_service_impl.CreateMasterContext(context_id, ctx));
   TF_ASSERT_OK(eager_service_impl.Enqueue(&remote_enqueue_request,
                                           &remote_enqueue_response));
-  ctx->Unref();
+  ctx->Unref(-1);
 }
 
 TEST_F(EagerServiceImplTest, KeepAliveTest) {

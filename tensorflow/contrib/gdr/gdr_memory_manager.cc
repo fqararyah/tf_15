@@ -316,7 +316,7 @@ void GdrMemoryManager::Run() {
                      << tensor_key;
         } else {
           const TensorBuffer* buffer = iter->second;
-          buffer->Unref();
+          buffer->Unref(-1);
           tensor_buffers_.erase(iter);
         }
       }

@@ -155,8 +155,8 @@ TEST(CPUAllocatorTest, Simple) {
              1048576 * sizeof(double) + 1024 * sizeof(float),
              1048576 * sizeof(double));
 
-  TypedAllocator::Deallocate(a, t1, 1024);
-  TypedAllocator::Deallocate(a, t2, 1048576);
+  TypedAllocator::Deallocate(a, t1, 1024, -2);
+  TypedAllocator::Deallocate(a, t2, 1048576, -3);
 
   CheckStats(a, 1025, 0, 1048576 * sizeof(double) + 1024 * sizeof(float),
              1048576 * sizeof(double));

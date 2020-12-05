@@ -128,7 +128,7 @@ TEST_F(SummaryDbWriterTest, WriteHistogram_VerifyTensorValues) {
   }
   TF_ASSERT_OK(writer_->WriteEvent(std::move(e)));
   TF_ASSERT_OK(writer_->Flush());
-  writer_->Unref();
+  writer_->Unref(-1);
   writer_ = nullptr;
 
   // TODO(nickfelt): implement QueryTensor() to encapsulate this
@@ -154,7 +154,7 @@ TEST_F(SummaryDbWriterTest, NothingWritten_NoRowsCreated) {
   TF_ASSERT_OK(CreateSummaryDbWriter(db_, "mad-science", "train", "jart", &env_,
                                      &writer_));
   TF_ASSERT_OK(writer_->Flush());
-  writer_->Unref();
+  writer_->Unref(-1);
   writer_ = nullptr;
   EXPECT_EQ(0LL, QueryInt("SELECT COUNT(*) FROM Ids"));
   EXPECT_EQ(0LL, QueryInt("SELECT COUNT(*) FROM Users"));
@@ -379,7 +379,7 @@ TEST_F(SummaryDbWriterTest, SetsRunFinishedTime) {
   ASSERT_EQ(0.023, QueryDouble("SELECT started_time FROM Runs"));
   ASSERT_EQ(0.0, QueryDouble("SELECT finished_time FROM Runs"));
   env_.AdvanceByMillis(23);
-  writer_->Unref();
+  writer_->Unref(-1);
   writer_ = nullptr;
   ASSERT_EQ(0.023, QueryDouble("SELECT started_time FROM Runs"));
   ASSERT_EQ(0.046, QueryDouble("SELECT finished_time FROM Runs"));

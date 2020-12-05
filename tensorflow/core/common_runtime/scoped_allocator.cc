@@ -52,13 +52,6 @@ ScopedAllocator::~ScopedAllocator() {
       VLOG(1) << "expected_call_count_ = " << expected_call_count_
               << " at deallocation";
   }
-  //*fareed
-  std::ofstream fout;
-  fout.open ("/home/nahmad/all_ds.txt", std::ios_base::app);
-  //std::string tmp_name(tensor_name);
-  fout<<"scoped_aloc"<<"\n";  
-  fout.close();
-  //*fareed
   if (tbuf_) tbuf_->Unref(79);
 }
 
@@ -98,13 +91,6 @@ void* ScopedAllocator::AllocateRaw(int32 field_index, size_t num_bytes) {
       container_->Drop(f.scope_id, this);
     }
     container_->Drop(id_, this);
-    //*fareed
-  std::ofstream fout;
-  fout.open ("/home/nahmad/all_ds.txt", std::ios_base::app);
-  //std::string tmp_name(tensor_name);
-  fout<<"scoped_alloc::"<<"\n";  
-  fout.close();
-  //*fareed
     container_->Unref(80);
     container_ = nullptr;
   }

@@ -113,7 +113,7 @@ EventMgr::~EventMgr() {
     delete e;
   }
   for (auto& t : *(accumulated_tensors_)) {
-    t.Unref();
+    t.Unref(-1);
   }
   delete accumulated_tensors_;
   while (!used_events_.empty()) {
@@ -121,7 +121,7 @@ EventMgr::~EventMgr() {
     delete ue->event;
     if (ue->mem != nullptr) {
       for (auto& t : *(ue->mem)) {
-        t.Unref();
+        t.Unref(-1);
       }
       delete ue->mem;
     }

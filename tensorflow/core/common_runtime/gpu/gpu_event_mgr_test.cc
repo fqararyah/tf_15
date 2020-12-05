@@ -125,7 +125,7 @@ TEST(EventMgr, Empty) {
 static void AddTensorReference(TensorReferenceVector* v, int64 size) {
   TestTensorBuffer* buf = new TestTensorBuffer(size);
   v->push_back(TensorReference(buf));
-  buf->Unref();
+  buf->Unref(-1);
 }
 
 // Delaying polling until after several enqueings should grow the

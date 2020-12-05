@@ -17,6 +17,7 @@ limitations under the License.
 
 #include <memory>
 #include <vector>
+#include <fstream>
 
 #include "tensorflow/core/common_runtime/colocation_graph.h"
 #include "tensorflow/core/common_runtime/device.h"
@@ -186,7 +187,6 @@ Status Placer::Run() {
     TF_RETURN_IF_ERROR(AssignAndLog(assigned_device, node, &colocation_graph,
                                     log_device_placement_));
   }
-
   // Perform a second pass assignment for those nodes explicitly
   // skipped during the first pass.
   for (Node* node : second_pass) {

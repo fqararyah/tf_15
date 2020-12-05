@@ -59,7 +59,7 @@ class ResourceOpKernel : public OpKernel {
   // by anyone, but it would break backward compatibility.
   ~ResourceOpKernel() override {
     if (resource_ != nullptr) {
-      resource_->Unref();
+      resource_->Unref(-1);
       if (cinfo_.resource_is_private_to_kernel()) {
         if (!cinfo_.resource_manager()
                  ->template Delete<T>(cinfo_.container(), cinfo_.name())
@@ -83,14 +83,14 @@ class ResourceOpKernel : public OpKernel {
                                  [this](T** ret) EXCLUSIVE_LOCKS_REQUIRED(mu_) {
                                    Status s = CreateResource(ret);
                                    if (!s.ok() && *ret != nullptr) {
-                                     CHECK((*ret)->Unref());
+                                     CHECK((*ret)->Unref(-1));
                                    }
                                    return s;
                                  }));
 
       Status s = VerifyResource(resource);
       if (TF_PREDICT_FALSE(!s.ok())) {
-        resource->Unref();
+        resource->Unref(-1);
         context->SetStatus(s);
         return;
       }

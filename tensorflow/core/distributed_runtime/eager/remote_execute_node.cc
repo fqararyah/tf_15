@@ -49,7 +49,7 @@ Status RemoteExecuteNode::Run() {
       [inputs, retvals, response, device,
        rpc_description](const Status& status) {
         for (auto handle : inputs) {
-          handle->Unref();
+          handle->Unref(-1);
         }
         if (status.ok()) {
           VLOG(3) << "Completed successfully: " << rpc_description;
@@ -71,7 +71,7 @@ Status RemoteExecuteNode::Run() {
           } else {
             retvals[i]->Poison(status);
           }
-          retvals[i]->Unref();
+          retvals[i]->Unref(-1);
         }
         delete response;
       });

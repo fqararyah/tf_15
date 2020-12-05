@@ -29,6 +29,8 @@ limitations under the License.
 #include "tensorflow/core/platform/mutex.h"
 #include "tensorflow/core/platform/types.h"
 
+#include <fstream>
+
 namespace tensorflow {
 
 IntraProcessRendezvous::IntraProcessRendezvous(const DeviceMgr* device_mgr)
@@ -155,6 +157,12 @@ void IntraProcessRendezvous::RecvAsync(const ParsedKey& parsed,
                                                      const Status& s) {
                   done(s, send_args, recv_args, *out, is_dead);
                   delete out;
+                  //*fareed
+        /* std::ofstream fout;
+        fout.open ("/home/nahmad/all_ds.txt", std::ios_base::app);
+        fout<<"rendz_mgr::\n";  
+        fout.close(); */
+        //*end fareed
                 },
                 std::move(done), std::placeholders::_1);
 

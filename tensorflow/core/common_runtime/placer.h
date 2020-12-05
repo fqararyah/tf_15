@@ -17,6 +17,7 @@ limitations under the License.
 #define TENSORFLOW_CORE_COMMON_RUNTIME_PLACER_H_
 
 #include <string>
+#include<map>
 
 #include "tensorflow/core/common_runtime/device_set.h"
 #include "tensorflow/core/framework/function.h"
@@ -92,7 +93,7 @@ class Placer {
   // found in 'devices'.
   bool CanAssignToDevice(const string& candidate_device_name,
                          const std::vector<Device*>& devices) const;
-
+  
   Graph* const graph_;  // Not owned.
   const string function_name_;
   const FunctionLibraryDefinition* const flib_def_;  // Not owned.
