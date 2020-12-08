@@ -48,6 +48,9 @@ class StepStatsCollector;
 // Multiple threads can call Executor::Run concurrently.
 class Executor {
  public:
+ //*fareed
+ static int from_run_internal;
+ //*end fareed
   virtual ~Executor() {}
 
   // RunAsync() executes the graph computation. "done" is run when the

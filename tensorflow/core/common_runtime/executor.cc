@@ -24,6 +24,7 @@ limitations under the License.
 #include <fstream>
 #include <iostream>
 #include <cuda_runtime.h>
+#include <unistd.h>
 
 #include "absl/memory/memory.h"
 #include "absl/strings/string_view.h"
@@ -77,6 +78,11 @@ limitations under the License.
 using namespace std;
 
 namespace tensorflow {
+//*fareed
+int Executor::from_run_internal = 0;
+//*end fareed
+
+
 namespace {
 
 // 1-D, 0 element tensor.
@@ -858,6 +864,7 @@ Status InferAllocAttr(const Node* n, const Node* dst,
 // The state associated with one invocation of ExecutorImpl::Run.
 // ExecutorState dispatches nodes when they become ready and keeps
 // track of how many predecessors of a node have not done (pending_).
+
 class ExecutorState {
  public:
   ExecutorState(const Executor::Args& args, ExecutorImpl* impl);
@@ -1879,6 +1886,12 @@ void ExecutorState::Process(TaggedNode tagged_node, int64 scheduled_nsec) {
           device->ComputeAsync(async, &state->ctx, done);
         }
       } else {
+        //*fareed
+        if(Executor::from_run_internal >= 5){
+          unsigned int microseconds = 5000;
+          usleep(microseconds);
+        }
+        //*end fareed
         // Synchronous computes.
         OpKernelContext ctx(&params, item.num_outputs);
         nodestats::SetOpStart(stats);
@@ -2864,9 +2877,11 @@ void ExecutorState::FrameState::ActivateNodes(const NodeItem* item,
     }
 
     // Add dst to the ready queue if it's ready
+    //*fareed
+    //I edited these lines to prioritize send and receive npdes
     if (dst_ready) {
       if (dst_item->is_control_trigger) dst_dead = false;
-      if( dst_item->node && IsSend(dst_item->node) ){
+      if( dst_item->node && IsSend(dst_item->node) || IsRecv(dst_item->node)){
         tmp1.emplace_back(dst_item->node, this, iter, dst_dead);
       } else {
         tmp2.emplace_back(dst_item->node, this, iter, dst_dead);
@@ -2880,6 +2895,7 @@ void ExecutorState::FrameState::ActivateNodes(const NodeItem* item,
   for (auto& tagged_node : tmp2) {
     ready->emplace_back(tagged_node);
   }
+  //*end fareed
 }
 
 void ExecutorState::FrameState::ActivateNexts(const GraphView* gview,

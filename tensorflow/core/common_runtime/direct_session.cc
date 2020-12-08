@@ -18,6 +18,8 @@ limitations under the License.
 #include <atomic>
 #include <string>
 #include <vector>
+#include <iostream>
+#include <unistd.h>
 
 #include "absl/container/flat_hash_set.h"
 #include "tensorflow/core/common_runtime/collective_executor_mgr.h"
@@ -675,7 +677,14 @@ Status DirectSession::RunInternal(
       pool->Schedule(std::move(c));
     };
   }
-
+  //*fareed
+  //std::cout<<"rnu internal\n";
+  Executor::from_run_internal++;
+  if(Executor::from_run_internal >= 5){
+    unsigned int microseconds = 5000000;
+    usleep(microseconds);
+  }
+  //*end fareed
   for (const auto& item : executors_and_keys->items) {
     // TODO(azaks): support partial run.
     // TODO(azaks): if the device picks its own threadpool, we need to assign
@@ -694,7 +703,6 @@ Status DirectSession::RunInternal(
     if (handler != nullptr) {
       args.user_intra_op_threadpool = handler->AsIntraThreadPoolInterface();
     }
-
     item.executor->RunAsync(args, barrier->Get());
   }
 
@@ -951,7 +959,9 @@ Status DirectSession::PRunSetup(const std::vector<string>& input_names,
     run_state->collector.reset(new StepStatsCollector(nullptr));
     args.stats_collector = run_state->collector.get();
   }
-
+  //*fareed
+  //std::cout<<"prun setup";
+  //end fareed
   for (auto& item : executors_and_keys->items) {
     item.executor->RunAsync(args, barrier->Get());
   }
