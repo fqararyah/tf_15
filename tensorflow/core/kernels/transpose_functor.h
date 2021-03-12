@@ -19,6 +19,8 @@ limitations under the License.
 #include <numeric>
 #include <string>
 #include <vector>
+#include <iostream>
+#include <fstream>
 #include "tensorflow/core/framework/tensor.h"
 #include "tensorflow/core/framework/tensor_types.h"
 #include "tensorflow/core/platform/logging.h"
@@ -147,6 +149,13 @@ template <typename Device, typename T, int NDIMS>
 void TransposeUsingEigen(const Device& d, const Tensor& in,
                          const gtl::ArraySlice<int32> perm, bool conjugate,
                          Tensor* out) {
+                           //std::cout<<"TransposeUsingEigen\n";
+                           if(pardnn_profile){
+                            std::ofstream fout;
+                            fout.open ("/home/nahmad/actual_nodes.txt", std::ios_base::app);
+                            fout<<"TransposeUsingEigen\n"; 
+                            fout.close();
+                          }
   Eigen::array<int, NDIMS> p;
   for (int i = 0; i < NDIMS; ++i) p[i] = perm[i];
   auto x = typename TTypes<T, NDIMS>::ConstTensor(

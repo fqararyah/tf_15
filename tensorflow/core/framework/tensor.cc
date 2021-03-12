@@ -622,6 +622,73 @@ void UnrefIfNonNull(core::RefCounted* buf, int caller_id) {
 
 }  // end namespace
 
+//*fareed
+vector<string> split(const string& str, string delimiter)
+{
+  vector<string> tokens;
+  string token;
+  int indx = 0;
+  size_t i = 0;
+  string maybe = "";
+  while(i < str.size()){
+    while (str[i] == delimiter[indx]){
+      maybe += str[i];
+      indx++;
+      i++;
+      if(indx == delimiter.size()){
+        maybe = "";
+        tokens.push_back(token);
+        token = "";
+        break;
+      }
+    }
+    indx = 0;
+    if(maybe != ""){
+      token += maybe;
+      maybe = "";
+    }
+    token += str[i];
+    i++;
+  }
+  if(token != ""){
+    tokens.push_back(token);
+  }
+  return tokens;
+}
+
+void clean_line(string &line){
+  string result = "";
+  for(size_t i = 0; i < line.size(); i++){
+    if(line[i] != '\n' and line[i] != '\r' and line[i] != '\t' and line[i] != ' ' and line[i] != '"'){
+      result += line[i];
+    }
+  }
+  line = result;
+}
+
+bool _pardnn_profile(){
+  //const char* env_p = std::getenv("PARDNN_DIR");
+  string path="/home/nahmad/pardnn/settings.txt";//(env_p);
+  ifstream setting_file;
+  string line;
+  setting_file.open(path);
+  while ( getline (setting_file,line) ){
+    clean_line(line);
+    //cout<<line<<"\n";
+    //cout<<"fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\n";
+    vector<string> splits = split(line, "::");
+    if(splits.size() == 2){
+      if(splits[0] == "profile"){
+        return (bool)std::stoi(splits[1]);
+      }
+    }
+  }
+  return false;
+}
+
+bool pardnn_profile = _pardnn_profile();
+//*end fareed
+
 Tensor::Tensor() : Tensor(DT_FLOAT) {}
 
 Tensor::Tensor(DataType type) : shape_({0}), buf_(nullptr) { set_dtype(type); }

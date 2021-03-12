@@ -25,7 +25,8 @@ limitations under the License.
 // TODO(yangzihao): Remove the dependency of conv_2d.h once we move all
 // GPU util functions and transpose kernels into separate files.
 #include "tensorflow/core/kernels/conv_2d.h"
-
+#include <iostream>
+#include <fstream>
 typedef Eigen::GpuDevice GPUDevice;
 
 namespace tensorflow {
@@ -57,6 +58,15 @@ template <typename T, bool conjugate>
 void TransposeSimple(const GPUDevice& d, const Tensor& in,
                      const gtl::ArraySlice<int32> perm, Tensor* out) {
   // Ensures we can use 32-bit index.
+  //*fareed
+  //std::cout<<"TransposeSimple\n";
+  /* if(pardnn_profile){
+    std::ofstream fout;
+    fout.open ("/home/nahmad/actual_nodes.txt", std::ios_base::app);
+    fout<<"TransposeSimple\n"; 
+    fout.close();
+  } */
+  //*end fareed
   const int64 nelem = in.NumElements();
   CHECK_LT(nelem, kint32max) << "Tensor too large to transpose on GPU";
   // Pack strides and permutation into one buffer.
@@ -107,6 +117,14 @@ struct TransposeUsingTile {
     auto in_data = reinterpret_cast<const T*>(in.tensor_data().data());
     auto out_data =
         reinterpret_cast<T*>(const_cast<char*>(out->tensor_data().data()));
+    //*fareed
+    /* if(pardnn_profile){
+      std::ofstream fout;
+      fout.open ("/home/nahmad/actual_nodes.txt", std::ios_base::app);
+      fout<<"TransposeUsingTile\n"; 
+      fout.close();
+    } */
+    //*end fareed
     switch (dims) {
       case 2:
         if (new_perm[0] == 1 && new_perm[1] == 0) {

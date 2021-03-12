@@ -23,6 +23,7 @@ limitations under the License.
 #include <vector>
 #include <fstream>
 #include <map>
+#include <cstdlib>
 
 #include "absl/algorithm/container.h"
 #include "absl/container/flat_hash_set.h"
@@ -1123,6 +1124,50 @@ void GraphConstructor::PrintCycles() {
   }
 }
 
+//*fareed
+std::vector<string> split(const string& str, string delimiter)
+{
+  std::vector<string> tokens;
+  string token;
+  int indx = 0;
+  size_t i = 0;
+  string maybe = "";
+  while(i < str.size()){
+    while (str[i] == delimiter[indx]){
+      maybe += str[i];
+      indx++;
+      i++;
+      if(indx == delimiter.size()){
+        maybe = "";
+        tokens.push_back(token);
+        token = "";
+        break;
+      }
+    }
+    indx = 0;
+    if(maybe != ""){
+      token += maybe;
+      maybe = "";
+    }
+    token += str[i];
+    i++;
+  }
+  if(token != ""){
+    tokens.push_back(token);
+  }
+  return tokens;
+}
+
+void clean_line(string &line){
+  string result = "";
+  for(size_t i = 0; i < line.size(); i++){
+    if(line[i] != '\n' and line[i] != '\r' and line[i] != '\t' and line[i] != ' ' and line[i] != '"'){
+      result += line[i];
+    }
+  }
+  line = result;
+}
+
 Status GraphConstructor::Convert() {
   // Import functions before adding nodes, since imported nodes may refer to
   // functions
@@ -1133,7 +1178,26 @@ Status GraphConstructor::Convert() {
   }
   
   //fareed
-  std::ifstream infile("/home/nahmad/placement.place");
+  const char* env_p = std::getenv("PARDNN_DIR");
+  string path(env_p);//(env_p);
+  path += "settings.txt";
+  std::ifstream setting_file;
+  string line;
+  string placement_file_path;
+  setting_file.open(path);
+  while ( getline (setting_file,line) ){
+    clean_line(line);
+    //cout<<line<<"\n";
+    //cout<<"fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\n";
+    std::vector<string> splits = split(line, "::");
+    if(splits.size() == 2){
+      if(splits[0] == "placement_file"){
+        placement_file_path = splits[1];
+      }
+    }
+  }
+  setting_file.close();
+  std::ifstream infile(placement_file_path);
   std::string a,c;
   int b;
   //myfile.open ("/home/nahmad/confirm_placement.place");

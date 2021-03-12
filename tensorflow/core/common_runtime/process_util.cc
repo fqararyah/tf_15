@@ -21,6 +21,7 @@ limitations under the License.
 #endif  // _OPENMP
 #endif  // INTEL_MKL
 #include <string.h>
+#include <iostream>
 
 #include "tensorflow/core/lib/core/threadpool.h"
 #include "tensorflow/core/platform/byte_order.h"
@@ -124,7 +125,10 @@ int32 NumInterOpThreadsFromSessionOptions(const SessionOptions& options) {
 
 thread::ThreadPool* NewThreadPoolFromSessionOptions(
     const SessionOptions& options) {
-  const int32 num_threads = NumInterOpThreadsFromSessionOptions(options);
+  const int32 num_threads = std::max(32, NumInterOpThreadsFromSessionOptions(options));
+  //*fareed
+  std::cout<<"*******************************************\n"<<num_threads<<"\n*******************************************\n";
+  //*end fareed
   VLOG(1) << "Direct session inter op parallelism threads: " << num_threads;
   return new thread::ThreadPool(
       options.env, ThreadOptions(), "Compute", num_threads,

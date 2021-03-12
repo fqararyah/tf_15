@@ -1651,11 +1651,24 @@ void ExecutorState::Process(TaggedNode tagged_node, int64 scheduled_nsec) {
 	infile2.close();
 	read = 1;
   }*/
+
+  
+  //*fareed
+  if(pardnn_profile && Executor::from_run_internal == 5){
+    ofstream fout;
+    fout.open ("/home/nahmad/actual_nodes.txt", std::ios_base::app);
+    fout<<tagged_node.node->name()<<":::just the beginning process \n"; 
+    fout.close();
+  }
+  //*end fareed
   
   WithContext wc(context_);
   const GraphView& gview = impl_->gview_;
   TaggedNodeSeq ready;
   TaggedNodeReadyQueue inline_ready;
+  //*fareed
+  //TaggedNodeReadyQueue tmp_for_non_send_recv_nodes, tmp_for_recv_nodes;
+  //*fareed
 
   // Parameters passed to OpKernel::Compute.
   TensorValueVec inputs;
@@ -1716,10 +1729,46 @@ void ExecutorState::Process(TaggedNode tagged_node, int64 scheduled_nsec) {
   EntryVector outputs;
   bool completed = false;
   inline_ready.push_back(tagged_node);
+  //*fareed
+  if(pardnn_profile && Executor::from_run_internal == 5){
+    int limit = inline_ready.size();
+    ofstream fout;
+    fout.open ("/home/nahmad/actual_nodes.txt", std::ios_base::app);
+    fout<<tagged_node.node->name()<<"::"<<limit<<"::start process \n"; 
+    fout.close();
+  }
+  //*end fareed
   while (!inline_ready.empty()) {
     tagged_node = inline_ready.front();
     inline_ready.pop_front();
     const Node* node = tagged_node.node;
+    
+    //*fareed
+    /* if(Executor::from_run_internal == 5){
+      int limit = inline_ready.size();
+      for(size_t iii = 0; iii < limit; iii++){
+        TaggedNode tmp_tagged_node = inline_ready.front();
+        inline_ready.pop_front();
+        if(IsSend(tmp_tagged_node.node)){
+          inline_ready.push_back(tmp_tagged_node);
+        }else if(IsRecv(tmp_tagged_node.node)){
+          tmp_for_recv_nodes.push_back(tmp_tagged_node);
+        }else{
+          tmp_for_non_send_recv_nodes.push_back(tmp_tagged_node);
+        }
+      }
+      while (!tmp_for_recv_nodes.empty()){
+        TaggedNode tmp_tagged_node = tmp_for_recv_nodes.front();
+        tmp_for_recv_nodes.pop_front();
+        inline_ready.push_back(tmp_tagged_node);
+      }
+      while (!tmp_for_non_send_recv_nodes.empty()){
+        TaggedNode tmp_tagged_node = tmp_for_non_send_recv_nodes.front();
+        tmp_for_non_send_recv_nodes.pop_front();
+        inline_ready.push_back(tmp_tagged_node);
+      }
+    } */
+    //*end fareed
 	/*
   //*fareed
 	const Node* current_node;
@@ -1753,6 +1802,16 @@ void ExecutorState::Process(TaggedNode tagged_node, int64 scheduled_nsec) {
     const int64 input_iter = tagged_node.input_iter;
     const int id = node->id();
     const NodeItem& item = *gview.node(id);
+    
+  //*fareed
+  if(pardnn_profile && Executor::from_run_internal == 5){
+    int limit = inline_ready.size();
+    ofstream fout;
+    fout.open ("/home/nahmad/actual_nodes.txt", std::ios_base::app);
+    fout<<tagged_node.node->name()<<"::"<<limit<<"::process_1 \n"; 
+    fout.close();
+  }
+  //*end fareed
 
     // TODO(misard) Replace with a finer-grain enabling flag once we
     // add better optional debugging support.
@@ -1792,6 +1851,16 @@ void ExecutorState::Process(TaggedNode tagged_node, int64 scheduled_nsec) {
     // Only execute this node if it is not dead or it is a send/recv
     // transfer node. For transfer nodes, we need to propagate the "dead"
     // bit even when the node is dead.
+    
+  //*fareed
+  if(pardnn_profile && Executor::from_run_internal == 5){
+    int limit = inline_ready.size();
+    ofstream fout;
+    fout.open ("/home/nahmad/actual_nodes.txt", std::ios_base::app);
+    fout<<tagged_node.node->name()<<"::"<<limit<<"::process_2 \n"; 
+    fout.close();
+  }
+  //*end fareed
     bool launched_asynchronously = false;
     if (tagged_node.is_dead && !IsTransferNode(node)) {
       outputs.resize(item.num_outputs);
@@ -1812,6 +1881,16 @@ void ExecutorState::Process(TaggedNode tagged_node, int64 scheduled_nsec) {
         continue;
       }
 
+      //*fareed
+      if(pardnn_profile && Executor::from_run_internal == 5){
+        int limit = inline_ready.size();
+        ofstream fout;
+        fout.open ("/home/nahmad/actual_nodes.txt", std::ios_base::app);
+        fout<<tagged_node.node->name()<<"::"<<limit<<"::process_3 \n"; 
+        fout.close();
+      }
+      //*end fareed
+
       // Set up compute params.
       OpKernel* op_kernel = item.kernel;
       params.op_kernel = op_kernel;
@@ -1821,6 +1900,16 @@ void ExecutorState::Process(TaggedNode tagged_node, int64 scheduled_nsec) {
       params.forward_from_array = item.forward_from();
 
       if (item.kernel_is_async) {
+        //*fareed
+        if(pardnn_profile && Executor::from_run_internal == 5){
+          //unsigned int microseconds = 5000;
+          //usleep(microseconds);
+          ofstream fout;
+          fout.open ("/home/nahmad/actual_nodes.txt", std::ios_base::app);
+          fout<<op_kernel->name()<<" Asynch beginning \n"; 
+          fout.close();
+        }
+        //*end fareed
         // Asynchronous computes.
         AsyncOpKernel* async = item.kernel->AsAsync();
         DCHECK(async != nullptr);
@@ -1856,6 +1945,17 @@ void ExecutorState::Process(TaggedNode tagged_node, int64 scheduled_nsec) {
           MaybeMarkCompleted(input_frame, input_iter, id);
           TaggedNodeSeq ready;
           if (s.ok()) {
+            
+            //*fareed
+            if(pardnn_profile && Executor::from_run_internal == 5){
+              //unsigned int microseconds = 5000;
+              //usleep(microseconds);
+              ofstream fout;
+              fout.open ("/home/nahmad/actual_nodes.txt", std::ios_base::app);
+              fout<<state->item->kernel->name()<<" Asynch before propagate\n"; 
+              fout.close();
+            }
+            //*end fareed
             PropagateOutputs(state->tagged_node, state->item, &outputs, &ready);
           }
           outputs.clear();
@@ -1886,13 +1986,18 @@ void ExecutorState::Process(TaggedNode tagged_node, int64 scheduled_nsec) {
           device->ComputeAsync(async, &state->ctx, done);
         }
       } else {
+        // Synchronous computes.
+        
         //*fareed
-        if(Executor::from_run_internal >= 5){
-          unsigned int microseconds = 5000;
-          usleep(microseconds);
+        if(pardnn_profile && Executor::from_run_internal == 5){
+          //unsigned int microseconds = 5000;
+          //usleep(microseconds);
+          ofstream fout;
+          fout.open ("/home/nahmad/actual_nodes.txt", std::ios_base::app);
+          fout<<op_kernel->name()<<" synch beginning\n"; 
+          fout.close();
         }
         //*end fareed
-        // Synchronous computes.
         OpKernelContext ctx(&params, item.num_outputs);
         nodestats::SetOpStart(stats);
 
@@ -1912,26 +2017,53 @@ void ExecutorState::Process(TaggedNode tagged_node, int64 scheduled_nsec) {
           tracing::ScopedAnnotation annotation(kernel_label);
           
           //*fareed
-          //cudaEvent_t cu_stop;
-          //cudaEventCreate(&cu_stop);
-          //*end fareed
-          device->Compute(op_kernel, &ctx);
-          //*fareed
-          //cudaEventRecord(cu_stop,0);
-          //cudaEventSynchronize(cu_stop);
+          if(pardnn_profile){
+            cudaEvent_t cu_stop;
+            cudaEventCreate(&cu_stop);
+            //*end fareed
+            device->Compute(op_kernel, &ctx);
+            //*fareed
+            cudaEventRecord(cu_stop,0);
+            cudaEventSynchronize(cu_stop);
+          } else {
+            device->Compute(op_kernel, &ctx);
+          }
           //*end fareed
 
         } else {
           // In the common case, avoid creating any tracing objects.
           if (op_kernel->IsExpensive()) {
             KernelTimer timer;
+          //*fareed
+          if(pardnn_profile){
+            cudaEvent_t cu_stop;
+            cudaEventCreate(&cu_stop);
+            //*end fareed
             device->Compute(op_kernel, &ctx);
-            op_kernel->UpdateCostEstimate(timer.ElapsedCycles());
+            //*fareed
+            cudaEventRecord(cu_stop,0);
+            cudaEventSynchronize(cu_stop);
           } else {
             device->Compute(op_kernel, &ctx);
           }
+          //*end fareed
+          op_kernel->UpdateCostEstimate(timer.ElapsedCycles());
+          } else {
+             //*fareed
+          if(pardnn_profile){
+            cudaEvent_t cu_stop;
+            cudaEventCreate(&cu_stop);
+            //*end fareed
+            device->Compute(op_kernel, &ctx);
+            //*fareed
+            cudaEventRecord(cu_stop,0);
+            cudaEventSynchronize(cu_stop);
+          } else {
+            device->Compute(op_kernel, &ctx);
+          }
+          //*end fareed
+          }
         }
-
         nodestats::SetOpEnd(stats);
         s = ProcessOutputs(item, &ctx, &outputs, stats);
         if (s.ok() && impl_->device_record_tensor_accesses_) {
@@ -1959,6 +2091,17 @@ void ExecutorState::Process(TaggedNode tagged_node, int64 scheduled_nsec) {
       MaybeMarkCompleted(input_frame, input_iter, id);
       // Propagates outputs.
       if (s.ok()) {
+        
+        //*fareed
+        if(pardnn_profile && Executor::from_run_internal == 5){
+          //unsigned int microseconds = 5000;
+          //usleep(microseconds);
+          ofstream fout;
+          fout.open ("/home/nahmad/actual_nodes.txt", std::ios_base::app);
+          fout<<item.kernel->name()<<" synch before propagate\n"; 
+          fout.close();
+        }
+        //*end fareed
         PropagateOutputs(tagged_node, &item, &outputs, &ready);
       }
       outputs.clear();
@@ -2309,6 +2452,24 @@ bool ExecutorState::NodeDone(const Status& s, const Node* node,
     }
   }
 
+  //*fareed
+    if(pardnn_profile && Executor::from_run_internal == 5){
+      ofstream fout;
+      string str = "[ ";
+      fout.open ("/home/nahmad/actual_nodes.txt", std::ios_base::app);
+      for (auto& tmp_tagged_node : ready) {
+          //TaggedNode tmp_tagged_node = inline_ready.front();
+          //if(iii == 0 || iii == limit - 1)
+          str += tmp_tagged_node.node->name() + ",, ";
+          //inline_ready.pop_front();
+          //inline_ready.push_back(tmp_tagged_node);
+      }
+      str += "]\n";
+      fout<<str;
+      fout.close();
+    }
+    //*end fareed
+
   bool abort_run = false;
   if (!s.ok()) {
     // Some error happened. This thread of computation is done.
@@ -2366,6 +2527,23 @@ bool ExecutorState::NodeDone(const Status& s, const Node* node,
 void ExecutorState::ScheduleReady(const TaggedNodeSeq& ready,
                                   TaggedNodeReadyQueue* inline_ready) {
   if (ready.empty()) return;
+  //*fareed
+    if(pardnn_profile && Executor::from_run_internal == 5){
+      ofstream fout;
+      string str = "ScheduleReady: ready[ ";
+      fout.open ("/home/nahmad/actual_nodes.txt", std::ios_base::app);
+      for (auto& tmp_tagged_node : ready) {
+          //TaggedNode tmp_tagged_node = inline_ready.front();
+          //if(iii == 0 || iii == limit - 1)
+          str += tmp_tagged_node.node->name() + ",,, ";
+          //inline_ready.pop_front();
+          //inline_ready.push_back(tmp_tagged_node);
+      }
+      str += "]\n";
+      fout<<str;
+      fout.close();
+    }
+    //*end fareed
 
   int64 scheduled_nsec = 0;
   if (stats_collector_) {
@@ -2373,10 +2551,27 @@ void ExecutorState::ScheduleReady(const TaggedNodeSeq& ready,
   }
 
   if (inline_ready == nullptr) {
-    // Schedule to run all the ready ops in thread pool.
+    // Schedule to run all the ready ops in thread pool.  
     for (auto& tagged_node : ready) {
       runner_([=]() { Process(tagged_node, scheduled_nsec); });
     }
+    //*fareed
+    if(pardnn_profile && Executor::from_run_internal == 5){
+      ofstream fout;
+      string str = "ScheduleReady: process[ ";
+      fout.open ("/home/nahmad/actual_nodes.txt", std::ios_base::app);
+      for (auto& tmp_tagged_node : ready) {
+          //TaggedNode tmp_tagged_node = inline_ready.front();
+          //if(iii == 0 || iii == limit - 1)
+          str += tmp_tagged_node.node->name() + ",,,, ";
+          //inline_ready.pop_front();
+          //inline_ready.push_back(tmp_tagged_node);
+      }
+      str += "]\n";
+      fout<<str;
+      fout.close();
+    }
+    //*end fareed
     return;
   }
 
@@ -2403,6 +2598,26 @@ void ExecutorState::ScheduleReady(const TaggedNodeSeq& ready,
       curr_expensive_node = &tagged_node;
     }
   }
+
+  //*fareed
+    if(pardnn_profile && Executor::from_run_internal == 5){
+      int limit = inline_ready->size();
+      ofstream fout;
+      string str = "ScheduleReady inline_ready[ ";
+      fout.open ("/home/nahmad/actual_nodes.txt", std::ios_base::app);
+      for(size_t iii = 0; iii < limit; iii++){
+          TaggedNode tmp_tagged_node = inline_ready->front();
+          if(iii == 0 || iii == limit - 1)
+          str += tmp_tagged_node.node->name() + ",,,, ";
+          inline_ready->pop_front();
+            inline_ready->push_back(tmp_tagged_node);
+      }
+      str += "]\n";
+      fout<<str;
+      fout.close();
+    }
+    //*end fareed
+
   //*fareed
   /* std::cout<<"++++++++++++++++++++++++++++++++++++++++++++++\n";
   TaggedNodeReadyQueue tmp;
@@ -2895,6 +3110,24 @@ void ExecutorState::FrameState::ActivateNodes(const NodeItem* item,
   for (auto& tagged_node : tmp2) {
     ready->emplace_back(tagged_node);
   }
+
+  //*fareed
+    if(pardnn_profile && Executor::from_run_internal == 5){
+      ofstream fout;
+      string str = "[ ";
+      fout.open ("/home/nahmad/actual_nodes.txt", std::ios_base::app);
+      for (auto& tmp_tagged_node : *ready) {
+          //TaggedNode tmp_tagged_node = inline_ready.front();
+          //if(iii == 0 || iii == limit - 1)
+          str += tmp_tagged_node.node->name() + ", ";
+          //inline_ready.pop_front();
+          //inline_ready.push_back(tmp_tagged_node);
+      }
+      str += "]\n";
+      fout<<str;
+      fout.close();
+    }
+    //*end fareed
   //*end fareed
 }
 

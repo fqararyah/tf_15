@@ -19,6 +19,7 @@ limitations under the License.
 #include <string>
 #include <vector>
 #include <iostream>
+#include <fstream>
 #include <unistd.h>
 
 #include "absl/container/flat_hash_set.h"
@@ -317,6 +318,7 @@ DirectSession::DirectSession(const SessionOptions& options,
   const int thread_pool_size =
       options_.config.session_inter_op_thread_pool_size();
   if (thread_pool_size > 0) {
+    //std::cout<<"f-\n";
     for (int i = 0; i < thread_pool_size; ++i) {
       thread::ThreadPool* pool = nullptr;
       bool owned = false;
@@ -326,9 +328,11 @@ DirectSession::DirectSession(const SessionOptions& options,
       thread_pools_.emplace_back(pool, owned);
     }
   } else if (options_.config.use_per_session_threads()) {
+    //std::cout<<"f-ff\n";
     thread_pools_.emplace_back(NewThreadPoolFromSessionOptions(options_),
                                true /* owned */);
   } else {
+    //std::cout<<"f-ffff\n";
     thread_pools_.emplace_back(GlobalThreadPool(options), false /* owned */);
     // Run locally if environment value of TF_NUM_INTEROP_THREADS is negative
     // and config.inter_op_parallelism_threads is unspecified or negative.
@@ -643,6 +647,7 @@ Status DirectSession::RunInternal(
         threadpool_options.inter_op_threadpool);
     pool = threadpool_wrapper.get();
   } else if (run_options.inter_op_thread_pool() >= 0) {
+    //std::cout<<"ffff-fff\n";
     pool = thread_pools_[run_options.inter_op_thread_pool()].first;
   }
 
@@ -673,6 +678,7 @@ Status DirectSession::RunInternal(
       handler_ptr->ScheduleInterOpClosure(std::move(c));
     };
   } else {
+    //std::cout<<"fff\n";
     default_runner = [this, pool](Executor::Args::Closure c) {
       pool->Schedule(std::move(c));
     };
@@ -680,9 +686,17 @@ Status DirectSession::RunInternal(
   //*fareed
   //std::cout<<"rnu internal\n";
   Executor::from_run_internal++;
-  if(Executor::from_run_internal >= 5){
-    unsigned int microseconds = 5000000;
-    usleep(microseconds);
+  if(pardnn_profile && Executor::from_run_internal >= 5){
+    std::ofstream fout;
+    if(pardnn_profile && Executor::from_run_internal == 5){
+      fout.open ("/home/nahmad/actual_nodes.txt");
+    }else{
+      fout.open ("/home/nahmad/actual_nodes.txt", std::ios_base::app);
+    }
+    fout<<"******************************************************\n"; 
+    fout.close();
+    //unsigned int microseconds = 10000000;
+    //usleep(microseconds);
   }
   //*end fareed
   for (const auto& item : executors_and_keys->items) {
